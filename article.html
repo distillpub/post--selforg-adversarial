@@ -1,15 +1,34 @@
 <d-article>
-<h1>Demo</h1>
-<p>We show the adversarial MNIST demo.</p>
+<h1>Demo&#x2F;Video</h1>
+<p>We show the adversarial MNIST demo. One problem here is that looking at the demo before reading anything will result in not knowing what to do there.</p>
+<p>One option is to have a video explaining what is going on here, before showing the demo. Alternatively, here we have just a video, and the demo is presented at the end of the adversarial MNIST CA section.</p>
 <h1>Introduction</h1>
-<p>Recap of what happened on MNIST CA and introduce the new adversarial task + biological justification</p>
-<h1>Adversarial MNIST CA</h1>
-<p>Section explaining this experiment.</p>
+<p>&lt;Recap of what happened on MNIST CA and introduce the new adversarial task + biological justification&gt;</p>
 
-<p>What do we want to show? I think the results are self-explanatory.</p>
+<p>The Growing Neural Cellular Automata [cite] and Self-classifying MNIST Digits [cite] articles in this thread presented the Neural Cellular Automata (Neural CAs) model and showed how these models can be trained end-to-end differentiably to accomplish self-organising task such as pattern growth and digit self-classification. The resulting models were robust to various kinds of perturbations: the growing CAs expressed regenerative capabilities to damage; the MNIST CAs were responsive to change in the underlying digits, triggering reclassification whenever necessary.</p>
+
+<p>In this work, we explore further the robustness of these models by <i>training adversaries </i>whose goal is to reprogram the CAs into doing something other than what they were trained to do. We will explore two kinds of adversarial computations: injecting some adversarial CA into the collective pretrained models; and perturbing the global state of the cells with some adversarial operation.</p>
+
+<p>For the first type of adversarial attacks we will train a new CA model such that, when placed in an environment with the original models described in the previous articles, is able to hijack the behavior of the collective CAs. [Biological comment]</p>
+
+<p>The second type of adversarial attacks will interact with previously trained growing CA models without touching any cell's parameters. Instead, we will apply a global state perturbation to all alive cells. This can be seen as inhibiting or enhancing combinations of state values, in turn hijacking proper communications among cells and within the cell's own states. [Biological comments]</p>
+<h1>Adversarial MNIST CAs</h1>
+<p>As a brief recap, the Self-classifying MNIST digits task consisted in placing CAs on a plane forming the shape of an MNIST digit. The cells had to communicate among themselves in order to achieve a total agreement as to which digit they formed.</p>
+
+<p>In this experiment, <strong>the goal is to create an adversarial CA that can hijack the global cells' classifications to always be an 8</strong>. We take the CA model trained on the previous article and freeze its parameters. We then train a new set of CAs whose model is identical to the specs of the frozen model but is randomly initialized. The training regime is mostly identical to the one used for training the self-classifying MNIST digits CAs. There are three important differences:</p>
+<ul><li>Regardless of what the actual digit is, we consider <i>the correct classification to always be an 8</i>.</li>
+<li>For each batch and each pixel, the CAs are randomly chosen to be either the pretrained model or the new adversarial one. We used a 10% chance of placing an adversarial CA instead of the pretrained one.</li>
+<li>We train only the adversarial CA parameters and keep the pretrained model frozen.</li></ul>
+
+<p>The task is remarkably simple to optimize [show training loss&#x2F;accuracy timeline?]. Here we show a few examples of test instances.</p>
+
+<p>While we trained the adversaries with a 10% distribution, we can observe that very often we need significantly fewer adversaries to steer the entire classification towards an 8. [Show either eval graphs and&#x2F;or videos.]</p>
+
+<p>We created a demo playground where the reader can draw digits and place adversaries with surgical precision. We encourage the reader to play with the demo to get a sense on how easily innocent cells can get swayed towards the wrong outcomes. </p>
 <h1>Adversaries for Growing CA</h1>
 <h2 id='same-experiment'>Same experiment as MNIST CA</h2>
-<p>But here it fails.</p>
+<p>[ Actually, a nice demo could come out even with this… let me do it.]</p>
+<p>But here it fails?</p>
 <h2 id='perturbations-mutations'>Perturbations mutations</h2>
 <p>Show how this instead works, and optionally add a playground.</p>
 <h1>Related work</h1>
