@@ -14,17 +14,71 @@
 <p>The second type of adversarial attacks will interact with previously trained growing CA models without touching any cell's parameters. Instead, we will apply a global state perturbation to all alive cells. This can be seen as inhibiting or enhancing combinations of state values, in turn hijacking proper communications among cells and within the cell's own states. [Biological comments]</p>
 <h1>Adversarial MNIST CAs</h1>
 <p>As a brief recap, the Self-classifying MNIST digits task consisted in placing CAs on a plane forming the shape of an MNIST digit. The cells had to communicate among themselves in order to achieve a total agreement as to which digit they formed.</p>
+<figure>
+    <div class="vc">
+    <div class="vidoverlay"></div>
+    <video playsinline muted width="640px" preload="auto">
+      <source src="images/mnist_orig_mosaic.mp4#t=3.0" type="video/mp4">
+Your browser does not support the video tag.
+    </video>
+    </div>
+<figcaption style="">
+The original model behavior on test data.</figcaption>
+</figure>
 
 <p>In this experiment, <strong>the goal is to create an adversarial CA that can hijack the global cells' classifications to always be an 8</strong>. We take the CA model trained on the previous article and freeze its parameters. We then train a new set of CAs whose model is identical to the specs of the frozen model but is randomly initialized. The training regime is mostly identical to the one used for training the self-classifying MNIST digits CAs. There are three important differences:</p>
 <ul><li>Regardless of what the actual digit is, we consider <i>the correct classification to always be an 8</i>.</li>
 <li>For each batch and each pixel, the CAs are randomly chosen to be either the pretrained model or the new adversarial one. We used a 10% chance of placing an adversarial CA instead of the pretrained one.</li>
 <li>We train only the adversarial CA parameters and keep the pretrained model frozen.</li></ul>
 
-<p>The task is remarkably simple to optimize [show training loss&#x2F;accuracy timeline?]. Here we show a few examples of test instances.</p>
-
-<p>While we trained the adversaries with a 10% distribution, we can observe that very often we need significantly fewer adversaries to steer the entire classification towards an 8. [Show either eval graphs and&#x2F;or videos.]</p>
-
+<p>The task is remarkably simple to optimize, reaching convergence in as little as 2000 training steps. Here we show a few examples of test instances.</p>
+<figure>
+    <div class="vc">
+    <div class="vidoverlay"></div>
+    <video playsinline muted width="640px" preload="auto">
+      <source src="images/mnist_10perc_adv_mosaic.mp4#t=3.0" type="video/mp4">
+Your browser does not support the video tag.
+    </video>
+    </div>
+<figcaption style="">
+Adversaries on 10% of the cells.</figcaption>
+</figure>
+<p>The adversaries are constantly communicating with their neighbors to keep them convinced of the wrong classification. We can see that by visualising what happens when we remove the adversaries after 200 steps. While some digits don't recover, most of them self-correct to the right classification.</p>
+<figure>
+    <div class="vc">
+    <div class="vidoverlay"></div>
+    <video playsinline muted width="640px" preload="auto">
+      <source src="images/mnist_10perc_adv_reset_mosaic.mp4#t=3.0" type="video/mp4">
+Your browser does not support the video tag.
+    </video>
+    </div>
+<figcaption style="">
+We remove the adversaries after 200 steps. Most digits recover, but not all.</figcaption>
+</figure>
+<p>While we trained the adversaries with a 10% distribution, we can observe that very often we need significantly fewer adversaries to steer the entire classification towards an 8. Here is a test run with 1% of cells being adversaries.</p>
+<figure>
+    <div class="vc">
+    <div class="vidoverlay"></div>
+    <video playsinline muted width="640px" preload="auto">
+      <source src="images/mnist_1perc_adv_mosaic.mp4#t=3.0" type="video/mp4">
+Your browser does not support the video tag.
+    </video>
+    </div>
+<figcaption style="">
+Adversaries on 1% of the cells.</figcaption>
+</figure>
 <p>We created a demo playground where the reader can draw digits and place adversaries with surgical precision. We encourage the reader to play with the demo to get a sense on how easily innocent cells can get swayed towards the wrong outcomes. </p>
+<figure>
+    <div class="vc">
+    <div class="vidoverlay"></div>
+    <video playsinline muted width="640px" preload="auto">
+      <source src="images/mnist_adversary_playground.mp4#t=3.0" type="video/mp4">
+Your browser does not support the video tag.
+    </video>
+    </div>
+<figcaption style="">
+Playground video to be replaced by the real playground.</figcaption>
+</figure>
 <h1>Adversarial Injections for Growing CAs</h1>
 <p>One question we may ask is whether the same kind of adversarial attack that was successful for the MNIST CA would work for the Growing CA model too. The Growing CA models' goals are to be able to grow a complex image pattern from a small seed, and having its result being persistent over time and robust to significant perturbations. The drawing below exemplifies what just described.</p>
 <p>[ Add drawing of: from lizard seed to pattern, to perturbation to regeneration]</p>
@@ -55,7 +109,7 @@
     <div class="vc">
     <div class="vidoverlay"></div>
     <video playsinline muted width="640px" preload="auto">
-      <source src="images/mutations_mosaic_video.mp4#t=0.1" type="video/mp4">
+      <source src="images/mutations_mosaic_video.mp4#t=3.0" type="video/mp4">
 Your browser does not support the video tag.
     </video>
     </div>
@@ -69,7 +123,7 @@ Effect of applying the trained perturbations.</figcaption>
     <div class="vc">
     <div class="vidoverlay"></div>
     <video playsinline muted width="640px" preload="auto">
-      <source src="images/tail_direction_mosaic.mp4#t=0.1" type="video/mp4">
+      <source src="images/tail_direction_mosaic.mp4#t=3.0" type="video/mp4">
 Your browser does not support the video tag.
     </video>
     </div>
@@ -82,19 +136,19 @@ Effect of following the direction of the tail perturbation.</figcaption>
     <div class="vc">
     <div class="vidoverlay"></div>
     <video playsinline muted width="640px" preload="auto">
-      <source src="images/combination_of_mutations.mp4#t=0.1" type="video/mp4">
+      <source src="images/combination_of_mutations.mp4#t=3.0" type="video/mp4">
 Your browser does not support the video tag.
     </video>
     </div>
 <figcaption style="">
 Effect of composing two trained perturbations.</figcaption>
 </figure>
-
+<p>Below there is a video showing the playground. It makes sense to actually just put the playground there instead.</p>
 <figure>
     <div class="vc">
     <div class="vidoverlay"></div>
     <video playsinline muted width="640px" preload="auto">
-      <source src="images/perturbation_playground.mp4#t=0.1" type="video/mp4">
+      <source src="images/perturbation_playground.mp4#t=3.0" type="video/mp4">
 Your browser does not support the video tag.
     </video>
     </div>
