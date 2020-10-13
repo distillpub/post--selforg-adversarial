@@ -3,8 +3,6 @@
 <p>We show the adversarial MNIST demo. One problem here is that looking at the demo before reading anything will result in not knowing what to do there.</p>
 <p>One option is to have a video explaining what is going on here, before showing the demo. Alternatively, here we have just a video, and the demo is presented at the end of the adversarial MNIST CA section.</p>
 <h1>Introduction</h1>
-<p>&lt;Recap of what happened on MNIST CA and introduce the new adversarial task + biological justification&gt;</p>
-
 <p>The Growing Neural Cellular Automata [cite] and Self-classifying MNIST Digits [cite] articles in this thread presented the Neural Cellular Automata (Neural CAs) model and showed how these models can be trained end-to-end differentiably to accomplish self-organising task such as pattern growth and digit self-classification. The resulting models were robust to various kinds of perturbations: the growing CAs expressed regenerative capabilities to damage; the MNIST CAs were responsive to change in the underlying digits, triggering reclassification whenever necessary.</p>
 
 <p>In this work, we explore further the robustness of these models by <i>training adversaries </i>whose goal is to reprogram the CAs into doing something other than what they were trained to do. We will explore two kinds of adversarial computations: injecting some adversarial CA into the collective pretrained models; and perturbing the global state of the cells with some adversarial operation.</p>
@@ -83,9 +81,18 @@ Playground video to be replaced by the real playground.</figcaption>
 <p>One question we may ask is whether the same kind of adversarial attack that was successful for the MNIST CA would work for the Growing CA model too. The Growing CA models' goals are to be able to grow a complex image pattern from a small seed, and having its result being persistent over time and robust to significant perturbations. The drawing below exemplifies what just described.</p>
 <p>[ Add drawing of: from lizard seed to pattern, to perturbation to regeneration]</p>
 
-<p>In this article, we will focus on the lizard pattern. The new goal will be to have some adversarial CAs change the global configuration of all the CAs, including the previously trained and now frozen lizard CAs.</p>
+<p>In this article, we will focus on the lizard pattern.</p>
+<figure>
+<img src='images/lizard_complete_low_res.png' style='width: 225px'>
+<figcaption>Mosaic of the desired mutations we want to apply.</figcaption>
+</figure>
+<p>The new goal will be to have some adversarial CAs change the global configuration of all the CAs, including the previously trained and now frozen lizard CAs.</p>
 <p>We showcase two new targets for the adversaries to generate: a red lizard, and a tailless lizard. </p>
-<p>[show new targets]</p>
+<figure>
+<img src='images/lizard_new_targets_exp2.png' style='width: 450px'>
+<figcaption>Mosaic of the desired mutations we want to apply.</figcaption>
+</figure>
+
 <p>These targets have very different properties: converting a lizard from green to red would show a global change in the behaviour of the resulting CAs, while having a severed tail is a more localized change.</p>
 
 <figure>
