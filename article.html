@@ -160,7 +160,8 @@ Effect of applying the trained perturbations.</figcaption>
 <p>The video above shows how this kind of training results in successfully discovering global state perturbations to change the target patterns to a desired variation of it. We can also see how not all perturbations are equally effective: in particular, the headless perturbation is by far the hardest and it results in a loss of other details across the whole lizard pattern. We also show what happens when we stop perturbing the states (an out-of-training situation) at step 500 throughout step 1000, and then reapply the mutation. This way we observe how both from a seed and from a grown pattern applying these perturbations is successful, and that the original CAs easily recover from this state perturbation once it goes away. This last result is perhaps not surprising after we observed how robust growing CA models are in general.</p>
 <h2 id='directions-and'>Directions and compositionality of perturbations</h2>
 <p>Let us go back to our choice of using a symmetric matrix for representing global state perturbations. Every complex symmetric matrix $A$ can be diagonalized as follows: </p>
-<p>$$A &#x3D; Q \Lambda Q^\intercal$$</p>
+<p>$A &#x3D; Q \Lambda Q^\intercal$</p>
+<p>Where $\Lambda$ is the diagonal eigenvalues matrix and </p>
 <figure>
     <div class="vc">
     <div class="vidoverlay"></div>
