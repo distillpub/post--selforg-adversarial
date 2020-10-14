@@ -161,7 +161,9 @@ Effect of applying the trained perturbations.</figcaption>
 <h2 id='directions-and'>Directions and compositionality of perturbations</h2>
 <p>Let us go back to our choice of using a symmetric matrix for representing global state perturbations. Every complex symmetric matrix $A$ can be diagonalized as follows: </p>
 <p>$A &#x3D; Q \Lambda Q^\intercal$</p>
-<p>where $\Lambda$ is the diagonal eigenvalues matrix and $Q$ is the orthogonal matrix of its eigenvectors. Another way of seeing this now becomes as applying a change of basis transformation, scaling each single component proportional to the eigenvalues, and then changing back to the original basis. Now it also becomes clear how easy it is to suppress&#x2F;amplify combinations of states. </p>
+<p>where $\Lambda$ is the diagonal eigenvalues matrix and $Q$ is the orthogonal matrix of its eigenvectors. Another way of seeing this now becomes as applying a change of basis transformation, scaling each single component proportional to the eigenvalues, and then changing back to the original basis. Now it also becomes clear how easy it is to suppress&#x2F;amplify combinations of states. Moreover, we can now imagine what would happen if all the eigenvalues were to be one. In that case, we would naturally have $Q I Q^\intercal &#x3D; I$ resulting in a noop. We now can decompose $Q \Lambda Q^\intercal &#x3D; Q (D + I) Q^\intercal$ where D is the <i>perturbation direction </i>($\Lambda - I$) in the "eigenvalue space". Suppose now we have a coefficient $k$ to scale D: $A_k &#x3D; Q (kD + I) Q^\intercal$. If $k&#x3D;1$, we have the original perturbation $A$ and $k&#x3D;0$, we have a noop. One natural question would be whether we can explore this direction and discover meaningful perturbations. Lucky for us, $A_k &#x3D; Q (kD + I) Q^\intercal &#x3D; k A + (1-k) I$ so we don't even have to compute eigenvalues and eigenvectors and we can simply scale $A$ and $I$ accordingly.</p>
+
+<p>Let us then take the tailless perturbation and see what happens as we vary k:</p>
 <figure>
     <div class="vc">
     <div class="vidoverlay"></div>
