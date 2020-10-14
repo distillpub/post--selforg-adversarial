@@ -85,14 +85,15 @@ Playground video to be replaced by the real playground.</figcaption>
 <figure>
 <img src='images/lizard_complete_low_res.png' style='width: 225px'>
 </figure>
-<p>The new goal will be to have some adversarial CAs change the global configuration of all the CAs, including the previously trained and now frozen lizard CAs.</p>
-<p>We showcase two new targets for the adversaries to generate: a red lizard, and a tailless lizard. </p>
+<p>The new goal will be to have some adversarial CAs change the global configuration of all the CAs, including the previously trained and now frozen lizard CAs. We showcase two new targets for the adversaries to generate: a tailless lizard and a red lizard. </p>
 <figure>
 <img src='images/lizard_new_targets_exp2.png' style='width: 450px'>
 <figcaption>List of the desired mutations we want to apply.</figcaption>
 </figure>
 
 <p>These targets have very different properties: converting a lizard from green to red would show a global change in the behaviour of the resulting CAs, while having a severed tail is a more localized change.</p>
+
+<p>We first train adversaries for the tailless target with a 10% chance for each cell to be a virus. Note how we prohibit cells to be viruses if they are outside the target pattern: the tail contains no viruses.</p>
 
 <figure>
     <div class="vc">
@@ -106,8 +107,8 @@ Your browser does not support the video tag.
 Adversaries on 10% of the cells.</figcaption>
 </figure>
 
-<p>[Show how this fails completely&#x2F;partially]</p>
-<p>I will describe this in more detail once I finalize the videos of interest.</p>
+<p>The video above shows 6 different runs of the same model with different adversaries placements. The results vary considerably: sometimes the virus successfully gets rid of the tail, sometimes the tail is only shrunk but not completely removed, and other times the pattern becomes unstable. It is also important to note that training these adversaries required much longer times to achieve convergence, and the acquired convergence is of a worse quality than what achieved for the MNIST CA adversarial experiment.</p>
+
 <figure>
     <div class="vc">
     <div class="vidoverlay"></div>
