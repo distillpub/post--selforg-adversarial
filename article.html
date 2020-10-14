@@ -141,8 +141,9 @@ Adversaries on 60% of the cells. At 500 steps, we stop the image and show only c
 <img src='images/mutations_mosaic.jpeg' style='width: 450px'>
 <figcaption>Mosaic of the desired mutations we want to apply.</figcaption>
 </figure>
-<p>We decided to experiment with a very simple kind of global state perturbation: applying a symmetric $16x16$ matrix multiplication $A$ to every alive cell at every step<d-footnote> In practice, we also clip the state of cells such that they stay bound within $[-3, +3]$. This is a minor detail and it stabilizes results minimally. Everything discussed here applies even if we were to not clip the space.</d-footnote>.</p>
-<p>Show individual videos of success with all different pattern targets</p>
+<p>We decided to experiment with a very simple kind of global state perturbation: applying a symmetric $16\times16$ matrix multiplication $A$ to every alive cell at every step<d-footnote> In practice, we also clip the state of cells such that they stay bounded within $[-3, +3]$. This is a minor detail and it stabilizes results minimally. Everything discussed here applies even if we were to not clip the space.</d-footnote>. To give insight on why we chose this, an even simpler "state addition" mutation would be insufficient because our models are technically unbounded, and very often we would want to suppress something by setting it to zero - something impossible to do with constant state additions. However, matrix multiplications have the possibility of amplifying&#x2F;suppressing combinations of states, which is exactly what we would like to have. As to why we force the matrix to be symmetric will be clear later on.</p>
+
+<p>We initialize $A$ as the identity matrix $I$ and train A just like we would train traditional Growing CAs, with the difference that the CA parameters are frozen, that we perform a global state perturbation through $A$ at every step, and that we consider initial image configurations to be both a seed, and a fully grown lizard (as opposed to the Growing CA article, where initial configurations were seeds only).</p>
 <figure>
     <div class="vc">
     <div class="vidoverlay"></div>
