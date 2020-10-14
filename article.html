@@ -107,7 +107,11 @@ Your browser does not support the video tag.
 Adversaries on 10% of the cells.</figcaption>
 </figure>
 
-<p>The video above shows 6 different runs of the same model with different adversaries placements. The results vary considerably: sometimes the virus successfully gets rid of the tail, sometimes the tail is only shrunk but not completely removed, and other times the pattern becomes unstable. It is also important to note that training these adversaries required much longer times to achieve convergence, and the acquired convergence is of a worse quality than what achieved for the MNIST CA adversarial experiment.</p>
+<p>The video above shows 6 different runs of the same model with different adversaries placements. The results vary considerably: sometimes the virus successfully gets rid of the tail, sometimes the tail is only shrunk but not completely removed, and other times the pattern becomes unstable. It is also important to note that training these adversaries required much longer times to achieve convergence and the acquired convergence is of a worse quality than what achieved for the MNIST CA adversarial experiment.</p>
+
+<p>This difference in quality is exacerbated in trying to fit the red lizard pattern. In this case, using only 10% of adversaries results in a complete failure. Some readers may wonder whether the frozen CAs have the capability of producing red cells at all, since there is no red in the original target, and suspect this was an impossible task to begin with. However, we note that the frozen model knows how to make red, because there are instances where a cell has to color itself white, and therefore has to know how to generate both green, red, and blue.</p>
+
+<p>To drive this point home, and to also test how much harder it is to have a "red virus" hijack the lizard pattern, we increased the percentage of the virus to as much as 60% of the total number of cells.</p>
 
 <figure>
     <div class="vc">
@@ -120,6 +124,9 @@ Your browser does not support the video tag.
 <figcaption style="">
 Adversaries on 60% of the cells. At 500 steps, we stop the image and show only cells that are from the original model.</figcaption>
 </figure>
+<p>In the video above, we can see how, at least at the beginning, 60% of adversaries are actually capable of coloring the lizard red. Take particular notice of the "step 500"<d-footnote> The still-image of the video is on step 500, and the video stops for a bit more than a second on step 500.</d-footnote>, where we mask out all the adversary cells and only show the original cells. There, we can see how quite some original cells are colored in red now. This is proof that the adversaries successfully managed to steer neighboring cells to color themselves red, where needed.</p>
+
+<p>However, the model is far from perfect: if left be for a while, it diverges and new lizards spawn. Moreover, the percentage of cells, being 60%, make it so the adversaries are heavily dependent on having a majority of cells being adversaries, and if we were to place a smaller percentage of adversaries, such as 20-30%, the model would be unstable.</p>
 
 <p>These negative results are very interesting: a model of CA extremely similar to the one seen in MNIST CA shows a much greater resistance to adversarial perturbation than those of its cousin. This empirical difference is further puzzling by the fact that both models, during training, are asynchronous and exposed to sizeable perturbations, with the goal of making them both robust to out-of-training configurations.</p>
 
