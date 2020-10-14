@@ -134,15 +134,14 @@ Adversaries on 60% of the cells. At 500 steps, we stop the image and show only c
 
 <p>Following this hypothesis, we suspect that more general-purpose Growing CAs that have observed different target patterns during training are more likely to be susceptible to adversarial attacks.</p>
 <h1>Perturbing the states of Growing CAs</h1>
-<p>We now turn our attention to adversarial attacks that do not modify or substitute any CA parameters, but interact with the system with other means. We again focus on Growing CAs, and we choose the lizard pattern again for illustrative purposes. Every cell of a growing CA consists of a group of 16 states, some of them phenotypical (RGBA states) and the remaining 12 of arbitrary purpose, generally used for storing and communicating information. As we described in the introduction, because the states of every cell are used to understand what to do and communicate with each other, we can perturb the states of these cells to hijack the overall system in certain ways.</p>
+<p>We now turn our attention to adversarial attacks that do not modify or substitute any CA parameters, but interact with the system with other means. We again focus on Growing CAs, and we choose the lizard pattern again for illustrative purposes. Every cell of a growing CA consists of a group of 16 states, some of them phenotypical (RGBA states) and the remaining 12 of arbitrary purposes, generally used for storing and communicating information. As we described in the introduction, because the states of every cell are used to understand what to do and communicate with each other, we can perturb the states of these cells to hijack the overall system in certain ways.</p>
 
 <p>There are a variety of ways we can perform state perturbations. We will focus on <i>global state perturbations</i>, defined as perturbations that are applied on every alive cell in every time step. The new goal is to discover a certain type of global state perturbation that results in a stable new pattern. We show 6 target patterns: the tailless and red lizard from the previous experiment, plus a blue lizard and lizards with other severed limbs and severed head.</p>
 <figure>
 <img src='images/mutations_mosaic.jpeg' style='width: 450px'>
 <figcaption>Mosaic of the desired mutations we want to apply.</figcaption>
 </figure>
-<p>Explain math</p>
-
+<p>We decided to experiment with a very simple kind of global state perturbation: applying a symmetric $16x16$ matrix multiplication $A$ to every alive cell at every step<d-footnote> In practice, we also clip the state of cells such that they stay bound within $[-3, +3]$. This is a minor detail and it stabilizes results minimally. Everything discussed here applies even if we were to not clip the space.</d-footnote>.</p>
 <p>Show individual videos of success with all different pattern targets</p>
 <figure>
     <div class="vc">
