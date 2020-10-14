@@ -111,7 +111,7 @@ Adversaries on 10% of the cells.</figcaption>
 
 <p>This difference in quality is exacerbated in trying to fit the red lizard pattern. In this case, using only 10% of adversaries results in a complete failure. Some readers may wonder whether the frozen CAs have the capability of producing red cells at all, since there is no red in the original target, and suspect this was an impossible task to begin with. However, we note that the frozen model knows how to make red, because there are instances where a cell has to color itself white, and therefore has to know how to generate both green, red, and blue.</p>
 
-<p>To drive this point home, and to also test how much harder it is to have a "red virus" hijack the lizard pattern, we increased the percentage of the virus to as much as 60% of the total number of cells.</p>
+<p>To drive this point home, and to also test how harder it is to have a "red virus" hijack the lizard pattern, we increased the percentage of the virus to as much as 60% of the total number of cells.</p>
 
 <figure>
     <div class="vc">
@@ -124,17 +124,19 @@ Your browser does not support the video tag.
 <figcaption style="">
 Adversaries on 60% of the cells. At 500 steps, we stop the image and show only cells that are from the original model.</figcaption>
 </figure>
-<p>In the video above, we can see how, at least at the beginning, 60% of adversaries are actually capable of coloring the lizard red. Take particular notice of the "step 500"<d-footnote> The still-image of the video is on step 500, and the video stops for a bit more than a second on step 500.</d-footnote>, where we mask out all the adversary cells and only show the original cells. There, we can see how quite some original cells are colored in red now. This is proof that the adversaries successfully managed to steer neighboring cells to color themselves red, where needed.</p>
+<p>In the video above we can see how, at least at the beginning, 60% of adversaries are actually capable of coloring the lizard red. Take particular notice of the "step 500"<d-footnote> The still-image of the video is on step 500, and the video stops for a bit more than a second on step 500.</d-footnote>, where we mask out all the adversary cells and only show the original cells. There, we can see how quite some original cells are colored in red now. This is proof that the adversaries successfully managed to steer neighboring cells to color themselves red, where needed.</p>
 
 <p>However, the model is far from perfect: if left be for a while, it diverges and new lizards spawn. Moreover, the percentage of cells, being 60%, make it so the adversaries are heavily dependent on having a majority of cells being adversaries, and if we were to place a smaller percentage of adversaries, such as 20-30%, the model would be unstable.</p>
 
-<p>These negative results are very interesting: a model of CA extremely similar to the one seen in MNIST CA shows a much greater resistance to adversarial perturbation than those of its cousin. This empirical difference is further puzzling by the fact that both models, during training, are asynchronous and exposed to sizeable perturbations, with the goal of making them both robust to out-of-training configurations.</p>
+<p>These mixed results are very interesting: a model of CA extremely similar to the one seen in MNIST CA shows a much greater resistance to adversarial perturbation than those of its cousin. This empirical difference is further puzzling by the fact that both models, during training, are asynchronous and exposed to sizeable perturbations, with the goal of making them both robust to out-of-training configurations.</p>
 
 <p>One notable difference between the two models is that the MNIST CAs have to change their opinion (digit classification) based on the information that they receive from their neighbors because at any time the underlying digit may change in shape even if in a specific position there would be no apparent change. For instance, imagine the case of a "1" turning into a "7": from the point of view of the cells in the lower part of the digit, there is no change, yet the total digit is a 7 now. This may make the MNIST CAs more susceptible to individuals' signals rather than what happens in Growing CAs, where the totality of cells is responsible for generating a given shape and there is never a moment where cells have to reconfigure themselves for regenerating something different than before.</p>
 
 <p>Following this hypothesis, we suspect that more general-purpose Growing CAs that have observed different target patterns during training are more likely to be susceptible to adversarial attacks.</p>
 <h1>Perturbing the states of Growing CAs</h1>
-<p>While we have observed robustness to groups of adversaries, our Growing CAs could still be weak to more <i>global </i>attacks. In this experiment, we perturb the state of every alive cell at every step with the same trainable perturbation. [bad phrasing].</p>
+<p>We now turn our attention to adversarial attacks that do not modify or substitute any CA parameters, but interact with the system with other means. We again focus on Growing CAs, and we choose the lizard pattern again for illustrative purposes. Every cell of a growing CA consists of a group of 16 states, some of them phenotypical (RGBA states) and the remaining 12 of arbitrary purpose, generally used for storing and communicating information. As we described in the introduction, because the states of every cell are used to understand what to do and communicate with each other, we can perturb the states of these cells to hijack the overall system in certain ways.</p>
+
+<p>There are a variety of ways we can perform state perturbations. We will focus on <i>global state perturbations</i>, defined as perturbations that are applied on every alive cell in every time step. The new goal is to discover a certain type of global state perturbation that results in a stable new pattern. We show 6 target patterns: the tailless and red lizard from the previous experiment, plus a blue lizard and lizards with other severed limbs and severed head.</p>
 <figure>
 <img src='images/mutations_mosaic.jpeg' style='width: 450px'>
 <figcaption>Mosaic of the desired mutations we want to apply.</figcaption>
