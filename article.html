@@ -179,13 +179,25 @@ Effect of following the direction of the tail perturbation.</figcaption>
 </figure>
 <p>Wow! As we descend from $k&#x3D;1$ to 0 we can clearly see the tail forming more and more complete. Astoundingly, if we proceed towards negative k values, so to the opposite direction of what we trained for, the lizard grows a longer tail! And then, the further away we go, the more cancerogenous the system becomes and eventually the lizard explodes. This cancerogenic behaviour is likely due to the fact that some of the perturbations applied on the states are also responsible for changing the homeostatic regulation of the system, making some cells die out&#x2F;grow in different ways than before. When we go the opposite direction, we are both going towards a "longer tail" regimen, but also changing these regulatory processes and eventually cancer appears.</p>
 
-<p>Can we perform multiple individually trained perturbations at the same time? Well, while there is no more mathematical rigour in the way we could apply these perturbations together, let us entertain this thought for a bit more. Suppose we had two perturbations $A$ and $B$, and for a divine accident their eigenvectors were the same, or more realistically, not that different from one another. Then, we could say: $A_k &#x3D; Q (k_A D_A + I) Q^\intercal$ and $B_k &#x3D; Q (k_B D_B + I) Q^\intercal$. In that case, it could be that $comb(A_k, B_k) &#x3D; Q(k_A D_A + k_b D_B + I)Q^\intercal &#x3D; k_A A + k_B B + (1 - k_A - k_B)I$ would result in something meaningful. After all, if $A &#x3D; B$, setting $k_A &#x3D; k_B &#x3D; 0.5$ would result in exactly the same perturbation.</p>
-<p>We want to emphasize how even in this ideal situation, there is no real reason to believe that a composition with $k_A &#x3D; k_B &#x3D; 1$ would necessarily result in a meaningful perturbation because we would have no way of telling whether this eigenvalue composition would actually do what we want it to do (compose perturbations in a stable way). Moreover, the eigenvectors of each perturbation are also going to be different from one another and using such a combination in such complex systems could have any outcome.</p>
-<p>Perhaps looking at what happens to the resulting direction in the case of identical eigenvectors may give us more insight as to what might happen in general. If we assume that perturbations are sampled independently, then the sum of two perturbations would be identity-centered in the eigenvalue space, while their variance would increase the more the sum of the $k$ weights increase. If some specific eigenvalues are shared in their value, a combination that keeps $k_A + k_B &#x3D; 1$ would keep these shared eigenvalues invariant. Moreover, we empirically observed that decreasing k for one single perturbation up to 0 results in stable perturbations. We could then hint that if we kept the sum of ks to be up to 1, the resulting mutation would be likely stable, while the higher the sum of ks, the more uncertain the result would be. Of course, we are also interested in seeing what happens if we applied combinations of perturbations in full (so $k_A &#x3D; k_B &#x3D; 1$).</p>
-
-<p>[Maybe add some video about sum(k) &#x3D; 1 to drive this point home first?]</p>
-
-<p>With this enormous disclaimer, what <i>actually happens</i> if we try to combine two or more mutations? The video below shows what happens when we combine the tailless and legless mutation as described above. Note that this particular composition results in a matrix as the sum of the two perturbations minus an identity matrix.</p>
+<p><strong>Can we perform multiple individually trained perturbations at the same time?</strong> </p>
+<p>Well, while there is no more mathematical rigour in the way we could apply these perturbations together, let us entertain this thought for a bit more. Suppose we had two perturbations $A$ and $B$, and for a divine accident their eigenvectors were the same, or more realistically, not that different from one another. Then, we could say: $A_k &#x3D; Q (k_A D_A + I) Q^\intercal$ and $B_k &#x3D; Q (k_B D_B + I) Q^\intercal$. In that case, it could be that $comb(A_k, B_k) &#x3D; Q(k_A D_A + k_b D_B + I)Q^\intercal &#x3D; k_A A + k_B B + (1 - k_A - k_B)I$ </p>
+<p>would result in something meaningful. At the very least, if $A &#x3D; B$, setting $k_A &#x3D; k_B &#x3D; 0.5$ would result in exactly the same perturbation.</p>
+<p>Now, since $D_A$ and $D_B$ are effectively a displacement from the identity $I$ and we have empirically observed how given any trained displacement $D_A$, for $0 \leq k_A \leq 1$ adding $k D_A$ results in a stable perturbation, we can hypothesize that as long as we have two perturbations whose directions k are $k_A + k_B \leq 1$, this could result in a stable perturbation. Picture it as interpolating stable perturbations with the direction coefficients.</p>
+<p>In practice, the eigenvectors are also different, so the combination results are likely going to be worse the more different the respective eigenvector bases are.</p>
+<p>Ok, now let us take a look at two perturbations, tailless and no leg lizards, and interpolate their direction coefficients by keeping their sums equal to 1:</p>
+<figure>
+    <div class="vc">
+    <div class="vidoverlay"></div>
+    <video playsinline muted width="640px" preload="auto">
+      <source src="images/lizard_combinations_mosaic.mp4#t=3.0" type="video/mp4">
+Your browser does not support the video tag.
+    </video>
+    </div>
+<figcaption style="">
+Effect of composing two trained perturbations while keeping the sum of k=1.</figcaption>
+</figure>
+<p>We can see how it seems to work, but it has some side effects such as the whole pattern sliding up. Similar results happen with other combinations of perturbations. Now, what would happen if we removed the restriction of the sum of k equal to 1, and instead added both perturbations entirely? We know that if the two perturbations were the same, we would end up going twice as far away from the identity perturbation, and in general we expect the variance of these perturbations to increase. Effectively, this means going further and further away from the stable perturbations discovered during training. This should mean that there are more things that can go wrong the higher the sum of k are. This can be generalized to an arbitrary number of perturbation compositions.</p>
+<p>We now show what happens when we combine the tailless and the no leg lizard perturbations at their fullest. Note that when we set both k to 1, the resulting perturbation is equal to the sum of the two perturbations minus an identity matrix.</p>
 <figure>
     <div class="vc">
     <div class="vidoverlay"></div>
@@ -197,9 +209,9 @@ Your browser does not support the video tag.
 <figcaption style="">
 Effect of composing two trained perturbations.</figcaption>
 </figure>
-<p>Well, it <i>kind of works</i>. The resulting pattern is just like we would desire it to be. The only nit being that it is sliding upwards, showing it's not as stable as its original perturbations were.</p>
+<p>Surprisingly, the resulting pattern is just like we would desire it to be. The only nit being that it is sliding upwards even faster than the other combinations we tried, showing it's even less stable than them.</p>
 
-<p>The argument we used can be generalized to any arbitrary number of perturbations. We created a small playground that allows the reader to input their desired combinations. Empirically, we were surprised by how many of these combinations result in good perturbations and it appears true that keeping k bound to 1 results in generally stable patterns. We also observed how going the opposite direction from a perturbation is usually much more unstable.</p>
+<p>The arguments we used can be generalized to any arbitrary number of perturbations. We created a small playground that allows the reader to input their desired combinations. Empirically, we were surprised by how many of these combinations result in good perturbations and it appears true that keeping k bound to 1 results in generally more stable patterns. We also observed how going the opposite direction from a perturbation is usually much more unstable.</p>
 <p>Below there is a video showing the playground. It makes sense to actually just put the playground there instead.</p>
 <figure>
     <div class="vc">
