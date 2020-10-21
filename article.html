@@ -64,7 +64,7 @@ We remove the adversaries after 200 steps. Most digits recover, but not all.</fi
     <div class="vc">
     <div class="vidoverlay"></div>
     <video playsinline muted width="640px" preload="auto">
-      <source src="images/mnist_1perc_adv_mosaic.mp4#t=3.0" type="video/mp4">
+      <source src="images/mnist_1perc_adv_mosaic.mp4#t=0.1" type="video/mp4">
 Your browser does not support the video tag.
     </video>
     </div>
@@ -122,7 +122,7 @@ Adversaries on 10% of the cells.</figcaption>
 
 <p>This difference in quality is exacerbated when trying to fit the red lizard pattern. In this case, using only 10% of adversaries results in a complete failure: the original cells are unaffected by the adversaries. Some readers may wonder whether the frozen CAs have the capability of producing red cells at all, since there is no red in the original target, and suspect this was an impossible task to begin with. However, we note that the frozen model knows how to make red, because there are instances where a cell has to color itself white, and therefore has to know how to generate both green, red, and blue.</p>
 
-<p>To drive this point home, and to also test how harder it is to have a "red virus" hijack the lizard pattern, we increased the percentage of the virus to as much as 60% of the total number of cells.</p>
+<p>To test how harder it is to have a "red virus" hijack the lizard pattern, we increased the percentage of the virus to as much as 60% of the total number of cells.</p>
 
 <figure>
     <div class="vc">
@@ -175,7 +175,9 @@ Effect of applying the trained perturbations.</figcaption>
 </figure>
 
 
-<p>The video above shows how this kind of training results in successfully discovering global state perturbations to change the target patterns to a desired variation of it. We can also see how not all perturbations are equally effective: in particular, the headless perturbation is by far the hardest and it results in a loss of other details across the whole lizard pattern. We also show what happens when we stop perturbing the states (an out-of-training situation) at step 500 throughout step 1000, and then reapply the mutation. This way we observe how both from a seed and from a grown pattern applying these perturbations is successful, and that the original CAs easily recover from this state perturbation once it goes away. This last result is perhaps not surprising after we observed how robust growing CA models are in general.</p>
+<p>The video above shows how this kind of training results in successfully discovering global state perturbations to change the target patterns to a desired variation of it. We show what happens when we stop perturbing the states (an out-of-training situation) at step 500 throughout step 1000, and then reapply the mutation. This way we observe how both from a seed and from a grown pattern applying these perturbations is successful, and that the original CAs easily recover from this state perturbation once it goes away. This last result is perhaps not surprising after we observed how robust growing CA models are in general.</p>
+
+<p>We can also see how not all perturbations are equally effective. In particular, the headless perturbation is by far the hardest and it results in a loss of other details across the whole lizard pattern such as the white coloring on its back. We hypothesize that the best this simple perturbation managed to find was suppressing a "structure" that contained both the head and the white coloring. This may be related to the concept of differentiation and distinction of biological organs. Predicting what kinds of perturbations would be harder or impossible to be made before trying them out empirically is still an open research question. On the other hand, a variant of this kind of synthetic analysis might help with defining higher order structures within systems.</p>
 <h2 id='directions-and'>Directions and compositionality of perturbations</h2>
 <p>Let us go back to our choice of using a symmetric matrix for representing global state perturbations. Every complex symmetric matrix $A$ can be diagonalized as follows: </p>
 <p>$A &#x3D; Q \Lambda Q^\intercal$</p>
@@ -198,13 +200,13 @@ Effect of following the direction of the tail perturbation.</figcaption>
 <p>As we descend from $k&#x3D;1$ to 0 we can clearly see the tail forming more and more complete. Surprisingly, if we proceed towards negative k values, so to the opposite direction of what we trained for, the lizard grows a longer tail! Unfortunately, the further away we go, the more cancerogenous the system becomes and eventually the lizard explodes. This cancerogenic behaviour is likely due to the fact that some of the perturbations applied on the states are also responsible for changing the homeostatic regulation of the system, making some cells die out&#x2F;grow in different ways than before. When we go the opposite direction, we are both going towards a "longer tail" regimen, but also changing these regulatory processes and eventually cancer appears.</p>
 
 <p><strong>Can we perform multiple individually trained perturbations at the same time?</strong> </p>
-<p>Well, while there is no more mathematical rigour in the way we could apply these perturbations together, let us entertain this thought for a bit more. Suppose we had two perturbations $A$ and $B$ and their eigenvectors were the same, or more realistically not that different from one another. Then, $A_k &#x3D; Q (k_A D_A + I) Q^\intercal$ and $B_k &#x3D; Q (k_B D_B + I) Q^\intercal$. </p>
+<p>Suppose we had two perturbations $A$ and $B$ and their eigenvectors were the same, or more realistically not that different from one another. Then, $A_k &#x3D; Q (k_A D_A + I) Q^\intercal$ and $B_k &#x3D; Q (k_B D_B + I) Q^\intercal$. </p>
 <p>In that case, it could be that </p>
 <p>$comb(A_k, B_k) &#x3D; Q(k_A D_A + k_B D_B + I)Q^\intercal &#x3D; k_A A + k_B B + (1 - k_A - k_B)I$ </p>
 <p>would result in something meaningful. At the very least, if $A &#x3D; B$, setting $k_A &#x3D; k_B &#x3D; 0.5$ would result in exactly the same perturbation.</p>
-<p>Now, since $D_A$ and $D_B$ are effectively a displacement from the identity $I$ and we have empirically observed how given any trained displacement $D_A$, for $0 \leq k_A \leq 1$ adding $k_A D_A$ results in a stable perturbation, we can hypothesize that as long as we have two perturbations whose positive directions $k$ are $k_A + k_B \leq 1$, this could result in a stable perturbation. Picture it as interpolating stable perturbations with the direction coefficients.</p>
+<p>Since $D_A$ and $D_B$ are effectively a displacement from the identity $I$ and we have empirically observed how given any trained displacement $D_A$, for $0 \leq k_A \leq 1$ adding $k_A D_A$ results in a stable perturbation, we can hypothesize that as long as we have two perturbations whose positive directions $k$ are $k_A + k_B \leq 1$, this could result in a stable perturbation. Picture it as interpolating stable perturbations with the direction coefficients.</p>
 <p>In practice the eigenvectors are also different so the combination results are likely going to be worse the more different the respective eigenvector bases are.</p>
-<p>Ok, now let us take a look at two perturbations, tailless and no leg lizards, and interpolate their direction coefficients by keeping their sums equal to 1:</p>
+<p>Now let us take a look at two perturbations, tailless and no leg lizards, and interpolate their direction coefficients by keeping their sums equal to 1:</p>
 <figure>
     <div class="vc">
     <div class="vidoverlay"></div>
@@ -229,7 +231,7 @@ Your browser does not support the video tag.
 <figcaption style="">
 Effect of composing two trained perturbations.</figcaption>
 </figure>
-<p>Surprisingly, the resulting pattern is just like we would desire it to be. The only nit being that it is sliding upwards even faster than the other combinations we tried, showing it's even less stable than them.</p>
+<p>Surprisingly, the resulting pattern is almost like we would desire it to be. It is evidently not perfect as it is sliding upwards even faster than the other combinations we tried, showing it's even less stable than them.</p>
 
 <p>The arguments we used can be generalized to any arbitrary number of perturbations. We created a small playground that allows the reader to input their desired combinations. Empirically, we were surprised by how many of these combinations result in good perturbations and it appears true that keeping k bound to 1 results in generally more stable patterns. We also observed how going the opposite direction from a perturbation is usually much more unstable.</p>
 <p>Below there is a video showing the playground. It makes sense to actually just put the playground there instead.</p>
