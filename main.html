@@ -245,15 +245,18 @@
     const $$$ = q => document.documentElement.querySelectorAll(q);
     $$$('.vidoverlay').forEach(e => e.onclick = () => {
       var video = e.parentNode.getElementsByTagName('video')[0]
-      video.onended = v => {e.style.opacity = 0.8; v.target.load();};
-      if (video.paused == true) {
+      video.onended = v => {e.style.opacity = null; v.target.load();};
+      console.log(video.paused);
+      console.log(e.style.opacity);
+      if (video.paused && !e.style.opacity){
+      	video.currentTime = 0.0;
+        video.play();
+      } else if (video.paused) {
         video.play();
       } else {
         video.pause();
       }
-      //e.parentNode.getElementsByTagName('video')[0].currentTime = 0.0;
-      //e.parentNode.getElementsByTagName('video')[0].play();
-      e.style.opacity = '0';
+      e.style.opacity = 0.0;
     });
   </script>
 </body>
