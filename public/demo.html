@@ -1,0 +1,259 @@
+<!doctype html>
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://distill.pub/template.v2.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/tf-backend-wasm.js"></script>
+<script src="data.js"></script>
+
+<style>
+label {
+    cursor: pointer;
+}
+label input {
+  display: none;
+}
+label input:not(:checked) ~ span {
+  opacity: 0.5;
+}
+</style>
+
+<canvas style="border: 1px solid black; image-rendering: pixelated;"></canvas>
+<p class="toolbox" style="font-size: 32px;">
+    <button id='clearBtn'>clear</button>
+    <button id='resetBtn'>reset</button>
+    <label>
+        <input id='pen' type="radio" checked="checked" name="radio"><span>🖊️</span>
+    </label>
+    <label>
+      <input type="radio" name="radio"><span>🧽</span>
+    </label>
+</p>
+<pre id='log'></pre>
+
+<script>
+    'use strict';
+
+    const $ = q=>document.querySelector(q);
+
+    const decodeFloat32 = b64 =>
+        fetch("data:application/octet-binary;base64," + b64)
+            .then(res => res.arrayBuffer())
+            .then(buffer => tf.tensor(new Float32Array(buffer)));
+
+    const loadImage = src => new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.src = src;
+    });
+
+    async function main() {
+
+        const colorLookup = tf.tensor([
+            [128, 0, 0],
+            [230, 25, 75],
+            [70, 240, 240],
+            [210, 245, 60],
+            [250, 190, 190],
+            [170, 110, 40],
+            [170, 255, 195],
+            [165, 163, 159],
+            [0, 128, 128],
+            [128, 128, 0],
+            [0, 0, 0], // This is the default for digits.
+        ], null, 'int32')
+
+        const weights = await Promise.all(WEIGHTS_B64.map(decodeFloat32));
+        const initImg = await loadImage('digits.png');
+
+        const [W, H, CH] = [140, 140, 20];
+        const ALIVE_ALPHA = 0.1
+        const state = tf.variable(tf.zeros([H, W, CH]))
+        window.state = state;
+        const livingCoords = [];
+
+        const canvas = $('canvas');
+        canvas.width = W;
+        canvas.height = H;
+        canvas.style.width = W*4+'px'
+        canvas.style.height = H*4+'px'
+        const ctx = canvas.getContext('2d')
+        let imageData = ctx.getImageData(0, 0, W, H);
+        ctx.drawImage(initImg, 0, 0);
+
+        const syncCanvas = ()=>tf.tidy(() => {
+            const prevImageData = imageData;
+            imageData = ctx.getImageData(0, 0, W, H);
+            const buf = state.dataSync();
+            livingCoords.length = 0;
+            for (let i=0; i<H*W; ++i) {
+                const alphaOfs = i*4+3;
+                const a0 = prevImageData.data[alphaOfs];
+                const a = imageData.data[alphaOfs];
+                if (a>ALIVE_ALPHA*255) {
+                    buf[i*CH] = a/255.0;
+                    livingCoords.push([Math.floor(i/W), i%W]);
+                } else if (a!=a0) {
+                    buf.fill(0.0, i*CH, i*CH+CH);
+                    imageData.data[alphaOfs] = 0;
+                }
+            }
+            state.assign(tf.tensor(buf, state.shape));
+        });
+        syncCanvas();
+
+        let [w0, b0, w1, b1, w2, b2] = weights;
+        w0 = w0.reshape([3 * 3 * 20, 80]);
+        w1 = w1.reshape([80, 80]);
+        w2 = w2.reshape([80, 19]);
+        const hood1d = [-1, 0, 1];
+        //const hood2d = tf.tensor(hood1d.map(y=>hood1d.map(x=>[y, x])).flat(), null, 'int32');
+        const hood2d = hood1d.map(y => hood1d.map(x => tf.tensor([y, x], [2], 'int32'))).flat();
+        const step = ()=>tf.tidy(() => {
+            if (livingCoords.length == 0)
+                return;
+            tf.util.shuffle(livingCoords);
+            const idxList = livingCoords.slice(0, Math.max(livingCoords.length/2, 1));
+            const idx = tf.tensor(idxList, null, 'int32');
+            //const hoodIdx = idx.expandDims(-2).add(hood2d); // not supported in wasm backend
+            const hoodIdx = tf.stack(hood2d.map(ofs => idx.add(ofs)), 1); // [n, 9, 2]
+            let x = tf.gatherND(state, hoodIdx).reshape([-1, w0.shape[0]]); // [n, 9*20]
+            x = tf.fused.matMul({ a: x, b: w0, bias: b0, activation: 'relu' });
+            x = tf.fused.matMul({ a: x, b: w1, bias: b1, activation: 'relu' });
+            x = tf.fused.matMul({ a: x, b: w2, bias: b2 });
+            x = x.add(tf.randomNormal(x.shape, 0.0, 0.02));
+            x = x.pad([[0, 0], [1, 0]]);
+            x = tf.scatterND(idx, x, state.shape);
+            state.assign(state.add(x));
+            // update vis
+            const label = tf.gatherND(state, idx).slice([0, 10], [-1, -1]).pad([[0, 0], [0, 1]], 0.1).argMax(-1);
+            const colors = colorLookup.gather(label).dataSync();
+            for (let i=0; i<idxList.length; ++i) {
+                const [y, x] = idxList[i];
+                const p = (y*W+x)*4;
+                imageData.data[p] = colors[i*3];
+                imageData.data[p+1] = colors[i*3+1];
+                imageData.data[p+2] = colors[i*3+2];
+            }
+        });
+        step(); // warm up
+
+
+        let drawRadius = 1.0;
+        const isErasing = e=>!$("#pen").checked || e.shiftKey;
+
+
+        ctx.strokeStyle = "#000000";
+        ctx.fillStyle = "#000000";
+        const line = (x0, y0, x1, y1, e) => {
+            let r = drawRadius;
+            if (isErasing(e)) {
+                ctx.globalCompositeOperation = "destination-out";
+                r *= 5.0;
+            }
+            ctx.lineWidth = r*2.0;
+            ctx.beginPath();
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(x1, y1);
+            ctx.stroke();
+            ctx.globalCompositeOperation = "source-over";
+        }
+        const circle = (x, y, e) => {
+            let r = drawRadius;
+            if (isErasing(e)) {
+                ctx.globalCompositeOperation = "destination-out";
+                r *= 5.0;
+            }
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.globalCompositeOperation = "source-over";
+        }
+
+        function canvasToGrid(xin, yin) {
+            const x = xin / canvas.clientWidth * W;
+            const y = yin / canvas.clientHeight * H;
+            return [x, y];    
+        }
+        const getClickPos = e=>{
+            return canvasToGrid(e.offsetX, e.offsetY);
+        }
+
+        function getTouchPos(touch) {
+            const rect = canvas.getBoundingClientRect();
+            return canvasToGrid(touch.clientX - rect.left, touch.clientY - rect.top);
+        }
+        let lastPos = 0;
+
+        canvas.onmousedown = e => {
+            const [x, y] = getClickPos(e);
+            lastPos = [x, y];
+            circle(x, y, e);
+            syncCanvas();
+        }
+        canvas.onmousemove = e => {
+            const [x, y] = getClickPos(e);
+            if (e.buttons == 1) {
+                const [x0, y0] = lastPos;
+                circle(x, y, e);
+                line(x0, y0, x, y, e);
+                syncCanvas();
+            }
+            lastPos = [x, y];
+        }
+
+        let lastTouchId = 0;
+        let lastTouchList = null;
+
+        canvas.addEventListener("touchstart", e => {
+            e.preventDefault();
+            for (const t of e.changedTouches) {
+                const [x, y] = getTouchPos(t);
+                circle(x,y, e);
+            }
+            syncCanvas();
+            lastTouchList = e.touches;
+        });
+
+        canvas.addEventListener("touchmove", e => {
+            e.preventDefault();
+            for (const t of e.changedTouches) {
+                const [x, y] = getTouchPos(t);
+                for (const tOld of lastTouchList){
+                    if (t.identifier == tOld.identifier) {
+                        const [xOld, yOld] = getTouchPos(tOld);
+                        line(xOld, yOld, x, y, e);
+                    }
+                }
+                circle(x, y, e);
+            }
+            syncCanvas();
+            lastTouchList = e.touches; 
+        });
+
+        $('#clearBtn').onclick = ()=>{
+            ctx.clearRect(0, 0, W, H);
+            syncCanvas();
+        }
+        $('#resetBtn').onclick = ()=>{
+            ctx.clearRect(0, 0, W, H);
+            syncCanvas();
+            ctx.drawImage(initImg, 0, 0);
+            syncCanvas();
+        }
+
+        function render() {
+            const t0 = Date.now();
+            step();
+            const dt = Date.now()-t0;
+            $('#log').innerText = `${dt} ms`
+            ctx.putImageData(imageData, 0, 0)
+            requestAnimationFrame(render);
+        }
+        render();
+    }
+
+    tf.setBackend('wasm').then(main);
+</script>
