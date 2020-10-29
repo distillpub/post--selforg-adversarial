@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://distill.pub/template.v2.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cash/4.1.2/cash.min.js"></script>
 <script src="gca_data.js"></script>
 
 <style>
@@ -63,6 +62,8 @@ label input:not(:checked) ~ span {
 
 <script>
   'use strict';
+
+  const $ = q=>document.querySelector(q);
   
   const sleep = (ms)=>new Promise(resolve => setTimeout(resolve, ms));
   
@@ -112,44 +113,44 @@ label input:not(:checked) ~ span {
   let redSlider = document.getElementById("redSlider");
   let blueSlider = document.getElementById("blueSlider");
 
-  $('#tailSlider').on('input', e=>{
+  $('#tailSlider').oninput = (e) =>{
       updateK("tail", parseFloat(e.target.value));
-  });
-  $('#legSlider').on('input', e=>{
+  }
+  $('#legSlider').oninput = (e) =>{
       updateK("leg", parseFloat(e.target.value));
-  });
-  $('#headSlider').on('input', e=>{
+  }
+  $('#headSlider').oninput = (e) =>{
       updateK("head", parseFloat(e.target.value));
-  });
-  $('#armSlider').on('input', e=>{
+  }
+  $('#armSlider').oninput = (e) =>{
       updateK("arm", parseFloat(e.target.value));
-  });
-  $('#redSlider').on('input', e=>{
+  }
+  $('#redSlider').oninput = (e) =>{
       updateK("red", parseFloat(e.target.value));
-  });
-  $('#blueSlider').on('input', e=>{
+  }
+  $('#blueSlider').oninput = (e) =>{
       updateK("blue", parseFloat(e.target.value));
-  });
+  }
 
   const updateKUnchecked = (kid, v) => {
     if (kid == "tail"){
       kTail = v;
-      $('#tailPerturbation').text(kTail);
+      $('#tailPerturbation').innerText = kTail;
     } else if (kid == "leg"){
       kLeg = v;
-      $('#legPerturbation').text(kLeg);
+      $('#legPerturbation').innerText = kLeg;
     } else if (kid == "head"){
       kHead = v;
-      $('#headPerturbation').text(kHead);
+      $('#headPerturbation').innerText = kHead;
     } else if (kid == "arm"){
       kArm = v;
-      $('#armPerturbation').text(kArm);
+      $('#armPerturbation').innerText = kArm;
     } else if (kid == "red"){
       kRed = v;
-      $('#redPerturbation').text(kRed);
+      $('#redPerturbation').innerText = kRed;
     } else if (kid == "blue"){
       kBlue = v;
-      $('#bluePerturbation').text(kBlue);
+      $('#bluePerturbation').innerText = kBlue;
     } else {
       console.log("ERROR!");
     }
@@ -234,17 +235,17 @@ label input:not(:checked) ~ span {
           kArm = kid == "arm" ? vAbs * vSign : kArmSign * (kArmAbs - armDecr);
           kRed = kid == "red" ? vAbs * vSign : kRedSign * (kRedAbs - redDecr);
           kBlue = kid == "blue" ? vAbs * vSign : kBlueSign * (kBlueAbs - blueDecr);
-          $('#tailPerturbation').text(kTail);
+          $('#tailPerturbation').innerText = kTail;
           tailSlider.value = kTail;
-          $('#legPerturbation').text(kLeg);
+          $('#legPerturbation').innerText = kLeg;
           legSlider.value = kLeg;
-          $('#headPerturbation').text(kHead);
+          $('#headPerturbation').innerText = kHead;
           headSlider.value = kHead;
-          $('#armPerturbation').text(kArm);
+          $('#armPerturbation').innerText = kArm;
           armSlider.value = kArm;
-          $('#redPerturbation').text(kRed);
+          $('#redPerturbation').innerText = kRed;
           redSlider.value = kRed;
-          $('#bluePerturbation').text(kBlue);
+          $('#bluePerturbation').innerText = kBlue;
           blueSlider.value = kBlue;
         }
       }
@@ -296,11 +297,11 @@ label input:not(:checked) ~ span {
     const [_, h, w, ch] = state.shape;
     
 
-    $('#reset').on('click', e=>{
+    $('#reset').onclick = (e)=>{
         tf.tidy(()=>{
           state.assign(initState);
         });
-    });
+    }
 
 
     const damage = (x, y, r)=>{
