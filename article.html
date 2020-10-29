@@ -237,7 +237,7 @@ Effect of composing two trained perturbations.</figcaption>
 <p>Surprisingly, the resulting pattern is almost like we would desire it to be. It is evidently not perfect as it is sliding upwards even faster than the other combinations we tried, showing it's even less stable than them.</p>
 
 <p>The arguments we used can be generalized to any arbitrary number of perturbations. We created a small playground that allows the reader to input their desired combinations. Empirically, we were surprised by how many of these combinations result in good perturbations and it appears true that keeping k bound to 1 results in generally more stable patterns. We also observed how going the opposite direction from a perturbation is usually much more unstable.</p>
-<p>Below there is a video showing the playground. It makes sense to actually just put the playground there instead.</p>
+<p>Below there is a video showing the playground and the playground underneath.</p>
 <figure>
     <div class="vc">
     <div class="vidoverlay"></div>
@@ -249,6 +249,8 @@ Your browser does not support the video tag.
 <figcaption style="">
 Demonstration of the playground.</figcaption>
 </figure>
+
+{% include public/mutating_gca_demo.html %}
 <h1>Related work</h1>
 <p><strong>ML:</strong></p>
 <ul><li><a href='https://arxiv.org/abs/1806.11146'>Adversarial reprogramming of neural networks</li><ul>
