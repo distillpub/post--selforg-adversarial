@@ -51,169 +51,173 @@ function mutatingGCADemo() {
   let redSlider = document.getElementById("redSlider");
   let blueSlider = document.getElementById("blueSlider");
 
-  $('#tailSlider').oninput = (e) =>{
-      updateK("tail", parseFloat(e.target.value));
-  }
-  $('#legSlider').oninput = (e) =>{
-      updateK("leg", parseFloat(e.target.value));
-  }
-  $('#headSlider').oninput = (e) =>{
-      updateK("head", parseFloat(e.target.value));
-  }
-  $('#armSlider').oninput = (e) =>{
-      updateK("arm", parseFloat(e.target.value));
-  }
-  $('#redSlider').oninput = (e) =>{
-      updateK("red", parseFloat(e.target.value));
-  }
-  $('#blueSlider').oninput = (e) =>{
-      updateK("blue", parseFloat(e.target.value));
-  }
-
-  const updateKUnchecked = (kid, v) => {
-    if (kid == "tail"){
-      kTail = v;
-      $('#tailPerturbation').innerText = kTail;
-    } else if (kid == "leg"){
-      kLeg = v;
-      $('#legPerturbation').innerText = kLeg;
-    } else if (kid == "head"){
-      kHead = v;
-      $('#headPerturbation').innerText = kHead;
-    } else if (kid == "arm"){
-      kArm = v;
-      $('#armPerturbation').innerText = kArm;
-    } else if (kid == "red"){
-      kRed = v;
-      $('#redPerturbation').innerText = kRed;
-    } else if (kid == "blue"){
-      kBlue = v;
-      $('#bluePerturbation').innerText = kBlue;
-    } else {
-      console.log("ERROR!");
-    }
-  }
-
-  const updateK = (kid, v) => {
-      if (forcesum1Ckbx.checked == false) {
-        updateKUnchecked(kid, v);
-      } else {
-        // You cannot go over 1.
-        let vAbs = Math.abs(v);
-        const vSign = Math.sign(v);
-        const kTailAbs = Math.abs(kTail);
-        const kTailSign = Math.sign(kTail);
-        const kLegAbs = Math.abs(kLeg);
-        const kLegSign = Math.sign(kLeg);
-        const kHeadAbs = Math.abs(kHead);
-        const kHeadSign = Math.sign(kHead);
-        const kArmAbs = Math.abs(kArm);
-        const kArmSign = Math.sign(kArm);
-        const kRedAbs = Math.abs(kRed);
-        const kRedSign = Math.sign(kRed);
-        const kBlueAbs = Math.abs(kBlue);
-        const kBlueSign = Math.sign(kBlue);
-
-        let kCurrAbs;
-        if (kid == "tail"){
-          kCurrAbs = kTailAbs;
-        } else if (kid == "leg"){
-          kCurrAbs = kLegAbs;
-        } else if (kid == "head"){
-          kCurrAbs = kHeadAbs;
-        } else if (kid == "arm"){
-          kCurrAbs = kArmAbs;
-        } else if (kid == "red"){
-          kCurrAbs = kRedAbs;
-        } else if (kid == "blue"){
-          kCurrAbs = kBlueAbs;
-        }
-        let totK = vAbs + kTailAbs + kLegAbs + kHeadAbs + kArmAbs
-              + kRedAbs + kBlueAbs - kCurrAbs;
-        if (totK <= 1.0) {
-          // No problem here, do just like you did before.
-          updateKUnchecked(kid, v);
-        } else {
-          // Prevent v from going over 1.
-          if (vAbs > 1.0) {
-            vAbs = 1.0;
-            totK = vAbs + kTailAbs + kLegAbs + kHeadAbs + kArmAbs
-              + kRedAbs + kBlueAbs - kCurrAbs;
-          }
-          // Subtract the excess from the rest.
-          const excess = totK - 1.0;
-
-          const tailContrib = kid == "tail" ? 0.0 : kTailAbs;
-          const legContrib = kid == "leg" ? 0.0 : kLegAbs;
-          const headContrib = kid == "head" ? 0.0 : kHeadAbs;
-          const armContrib = kid == "arm" ? 0.0 : kArmAbs;
-          const redContrib = kid == "red" ? 0.0 : kRedAbs;
-          const blueContrib = kid == "blue" ? 0.0 : kBlueAbs;
-          const totContrib = tailContrib + legContrib + headContrib +
-              armContrib + redContrib + blueContrib;
-
-          let tailDecr = 0.0;
-          let legDecr = 0.0;
-          let headDecr = 0.0;
-          let armDecr = 0.0;
-          let redDecr = 0.0;
-          let blueDecr = 0.0;
-          if (totContrib > 1e-6) {
-            tailDecr = tailContrib / totContrib * excess;
-            legDecr = legContrib / totContrib * excess;
-            headDecr = headContrib / totContrib * excess;
-            armDecr = armContrib / totContrib * excess;
-            redDecr = redContrib / totContrib * excess;
-            blueDecr = blueContrib / totContrib * excess;
-          }
-
-          kTail = kid == "tail" ? vAbs * vSign : kTailSign * (kTailAbs - tailDecr);
-          kLeg = kid == "leg" ? vAbs * vSign : kLegSign * (kLegAbs - legDecr);
-          kHead = kid == "head" ? vAbs * vSign : kHeadSign * (kHeadAbs - headDecr);
-          kArm = kid == "arm" ? vAbs * vSign : kArmSign * (kArmAbs - armDecr);
-          kRed = kid == "red" ? vAbs * vSign : kRedSign * (kRedAbs - redDecr);
-          kBlue = kid == "blue" ? vAbs * vSign : kBlueSign * (kBlueAbs - blueDecr);
-          $('#tailPerturbation').innerText = kTail;
-          tailSlider.value = kTail;
-          $('#legPerturbation').innerText = kLeg;
-          legSlider.value = kLeg;
-          $('#headPerturbation').innerText = kHead;
-          headSlider.value = kHead;
-          $('#armPerturbation').innerText = kArm;
-          armSlider.value = kArm;
-          $('#redPerturbation').innerText = kRed;
-          redSlider.value = kRed;
-          $('#bluePerturbation').innerText = kBlue;
-          blueSlider.value = kBlue;
-        }
-      }
-      updatePerturbation();
-  }
-
-
-  let perturbationMatrix = tf.eye(16);
-
-  const perturbations = tf.tensor(PERTURBATIONS);
-  const tailPertM = perturbations.gather([0]).squeeze();
-  const legPertM = perturbations.gather([1]).squeeze();
-  const headPertM = perturbations.gather([2]).squeeze();
-  const armPertM = perturbations.gather([3]).squeeze();
-  const redPertM = perturbations.gather([4]).squeeze();
-  const bluePertM = perturbations.gather([5]).squeeze();
-
-  const I = tf.eye(16);
-  const updatePerturbation = () => {
-      let kI = 1.0 - kTail - kLeg - kHead - kArm - kRed - kBlue;
-      perturbationMatrix = I.mul(kI).
-        add(tailPertM.mul(kTail)).
-        add(legPertM.mul(kLeg)).
-        add(headPertM.mul(kHead)).
-        add(armPertM.mul(kArm)).
-        add(redPertM.mul(kRed)).
-        add(bluePertM.mul(kBlue));
-  }
 
   const run = async ()=>{
+
+    let perturbationMatrix = tf.eye(16);
+
+    const perturbations = tf.tensor(PERTURBATIONS);
+    const tailPertM = perturbations.gather([0]).squeeze();
+    const legPertM = perturbations.gather([1]).squeeze();
+    const headPertM = perturbations.gather([2]).squeeze();
+    const armPertM = perturbations.gather([3]).squeeze();
+    const redPertM = perturbations.gather([4]).squeeze();
+    const bluePertM = perturbations.gather([5]).squeeze();
+
+    const I = tf.eye(16);
+    const updatePerturbation = () => {
+        let kI = 1.0 - kTail - kLeg - kHead - kArm - kRed - kBlue;
+        perturbationMatrix = I.mul(kI).
+          add(tailPertM.mul(kTail)).
+          add(legPertM.mul(kLeg)).
+          add(headPertM.mul(kHead)).
+          add(armPertM.mul(kArm)).
+          add(redPertM.mul(kRed)).
+          add(bluePertM.mul(kBlue));
+    }
+
+
+    $('#tailSlider').oninput = (e) =>{
+        updateK("tail", parseFloat(e.target.value));
+    }
+    $('#legSlider').oninput = (e) =>{
+        updateK("leg", parseFloat(e.target.value));
+    }
+    $('#headSlider').oninput = (e) =>{
+        updateK("head", parseFloat(e.target.value));
+    }
+    $('#armSlider').oninput = (e) =>{
+        updateK("arm", parseFloat(e.target.value));
+    }
+    $('#redSlider').oninput = (e) =>{
+        updateK("red", parseFloat(e.target.value));
+    }
+    $('#blueSlider').oninput = (e) =>{
+        updateK("blue", parseFloat(e.target.value));
+    }
+
+    const updateKUnchecked = (kid, v) => {
+      if (kid == "tail"){
+        kTail = v;
+        $('#tailPerturbation').innerText = kTail;
+      } else if (kid == "leg"){
+        kLeg = v;
+        $('#legPerturbation').innerText = kLeg;
+      } else if (kid == "head"){
+        kHead = v;
+        $('#headPerturbation').innerText = kHead;
+      } else if (kid == "arm"){
+        kArm = v;
+        $('#armPerturbation').innerText = kArm;
+      } else if (kid == "red"){
+        kRed = v;
+        $('#redPerturbation').innerText = kRed;
+      } else if (kid == "blue"){
+        kBlue = v;
+        $('#bluePerturbation').innerText = kBlue;
+      } else {
+        console.log("ERROR!");
+      }
+    }
+
+
+    const updateK = (kid, v) => {
+        if (forcesum1Ckbx.checked == false) {
+          updateKUnchecked(kid, v);
+        } else {
+          // You cannot go over 1.
+          let vAbs = Math.abs(v);
+          const vSign = Math.sign(v);
+          const kTailAbs = Math.abs(kTail);
+          const kTailSign = Math.sign(kTail);
+          const kLegAbs = Math.abs(kLeg);
+          const kLegSign = Math.sign(kLeg);
+          const kHeadAbs = Math.abs(kHead);
+          const kHeadSign = Math.sign(kHead);
+          const kArmAbs = Math.abs(kArm);
+          const kArmSign = Math.sign(kArm);
+          const kRedAbs = Math.abs(kRed);
+          const kRedSign = Math.sign(kRed);
+          const kBlueAbs = Math.abs(kBlue);
+          const kBlueSign = Math.sign(kBlue);
+
+          let kCurrAbs;
+          if (kid == "tail"){
+            kCurrAbs = kTailAbs;
+          } else if (kid == "leg"){
+            kCurrAbs = kLegAbs;
+          } else if (kid == "head"){
+            kCurrAbs = kHeadAbs;
+          } else if (kid == "arm"){
+            kCurrAbs = kArmAbs;
+          } else if (kid == "red"){
+            kCurrAbs = kRedAbs;
+          } else if (kid == "blue"){
+            kCurrAbs = kBlueAbs;
+          }
+          let totK = vAbs + kTailAbs + kLegAbs + kHeadAbs + kArmAbs
+                + kRedAbs + kBlueAbs - kCurrAbs;
+          if (totK <= 1.0) {
+            // No problem here, do just like you did before.
+            updateKUnchecked(kid, v);
+          } else {
+            // Prevent v from going over 1.
+            if (vAbs > 1.0) {
+              vAbs = 1.0;
+              totK = vAbs + kTailAbs + kLegAbs + kHeadAbs + kArmAbs
+                + kRedAbs + kBlueAbs - kCurrAbs;
+            }
+            // Subtract the excess from the rest.
+            const excess = totK - 1.0;
+
+            const tailContrib = kid == "tail" ? 0.0 : kTailAbs;
+            const legContrib = kid == "leg" ? 0.0 : kLegAbs;
+            const headContrib = kid == "head" ? 0.0 : kHeadAbs;
+            const armContrib = kid == "arm" ? 0.0 : kArmAbs;
+            const redContrib = kid == "red" ? 0.0 : kRedAbs;
+            const blueContrib = kid == "blue" ? 0.0 : kBlueAbs;
+            const totContrib = tailContrib + legContrib + headContrib +
+                armContrib + redContrib + blueContrib;
+
+            let tailDecr = 0.0;
+            let legDecr = 0.0;
+            let headDecr = 0.0;
+            let armDecr = 0.0;
+            let redDecr = 0.0;
+            let blueDecr = 0.0;
+            if (totContrib > 1e-6) {
+              tailDecr = tailContrib / totContrib * excess;
+              legDecr = legContrib / totContrib * excess;
+              headDecr = headContrib / totContrib * excess;
+              armDecr = armContrib / totContrib * excess;
+              redDecr = redContrib / totContrib * excess;
+              blueDecr = blueContrib / totContrib * excess;
+            }
+
+            kTail = kid == "tail" ? vAbs * vSign : kTailSign * (kTailAbs - tailDecr);
+            kLeg = kid == "leg" ? vAbs * vSign : kLegSign * (kLegAbs - legDecr);
+            kHead = kid == "head" ? vAbs * vSign : kHeadSign * (kHeadAbs - headDecr);
+            kArm = kid == "arm" ? vAbs * vSign : kArmSign * (kArmAbs - armDecr);
+            kRed = kid == "red" ? vAbs * vSign : kRedSign * (kRedAbs - redDecr);
+            kBlue = kid == "blue" ? vAbs * vSign : kBlueSign * (kBlueAbs - blueDecr);
+            $('#tailPerturbation').innerText = kTail;
+            tailSlider.value = kTail;
+            $('#legPerturbation').innerText = kLeg;
+            legSlider.value = kLeg;
+            $('#headPerturbation').innerText = kHead;
+            headSlider.value = kHead;
+            $('#armPerturbation').innerText = kArm;
+            armSlider.value = kArm;
+            $('#redPerturbation').innerText = kRed;
+            redSlider.value = kRed;
+            $('#bluePerturbation').innerText = kBlue;
+            blueSlider.value = kBlue;
+          }
+        }
+        updatePerturbation();
+    }
+
+
     const r = await fetch(GRAPH_URL);
     const consts = parseConsts(await r.json());
     
@@ -318,6 +322,7 @@ function mutatingGCADemo() {
     }
     render();
   }
-  run();
+  //run();
+  tf.setBackend('webgl').then(run);
 }
 mutatingGCADemo();
