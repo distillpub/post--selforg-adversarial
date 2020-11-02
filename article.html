@@ -46,7 +46,7 @@ Your browser does not support the video tag.
     </video>
     </div>
 <figcaption style="">
-Adversaries on 10% of the cells.</figcaption>
+Adversaries on 10% of the cells (black pixels).</figcaption>
 </figure>
 <p>The adversaries are constantly communicating with their neighbors to keep them convinced of the wrong classification. We can see that by visualising what happens when we remove the adversaries after 200 steps. While some digits don't recover, most of them self-correct to the right classification.</p>
 <figure>
@@ -58,7 +58,7 @@ Your browser does not support the video tag.
     </video>
     </div>
 <figcaption style="">
-We remove the adversaries after 200 steps. Most digits recover, but not all.</figcaption>
+We remove the adversaries (black pixels) after 200 steps. Most digits recover, but not all.</figcaption>
 </figure>
 <p>While we trained the adversaries with a 10% distribution, we can observe that very often we need significantly fewer adversaries to steer the entire classification towards an 8. Here is a test run with 1% of cells being adversaries.</p>
 <figure>
@@ -70,7 +70,7 @@ Your browser does not support the video tag.
     </video>
     </div>
 <figcaption style="">
-Adversaries on 1% of the cells.</figcaption>
+Adversaries on 1% of the cells (black pixels).</figcaption>
 </figure>
 <p>We created a demo playground where the reader can draw digits and place adversaries with surgical precision. We encourage the reader to play with the demo to get a sense on how easily innocent cells can get swayed towards the wrong outcomes. </p>
 <figure>
