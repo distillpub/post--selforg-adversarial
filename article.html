@@ -119,7 +119,10 @@ The target CA to hijack.</figcaption>
 <figcaption>List of the desired mutations we want to apply.</figcaption>
 </figure>
 
-<p>These targets have very different properties: converting a lizard from green to red would show a global change in the behaviour of the resulting CAs, while having a severed tail is a more localized change.</p>
+<p>These targets have very different properties: </p>
+<ul><li><strong>Red lizard:</strong> converting a lizard from green to red would show a global change in the behaviour of the resulting CAs. This behavior is not present as is in the current combination of states&#x2F;model symbiosis. The adversaries have to then find a way to fool other cells into doing things they have never done before (create a lizard shape but colored in red).</li>
+<li><strong>Tailless lizard:</strong> having a severed tail is a more localized change that requires some cells to be fooled into diversifying themselves in the wrong way: cells need to believe to be at the edge of the pattern even though they are where the tail is supposed to grow.</li></ul>
+<p>Just like in the previous experiment, our adversaries can only affect, indirectly, the states of the original cells.</p>
 
 <p>We first train adversaries for the tailless target with a 10% chance for each cell to be a virus. Note how we prohibit cells to be viruses if they are outside the target pattern: the tail contains no viruses.</p>
 
