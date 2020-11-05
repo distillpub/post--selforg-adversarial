@@ -13,7 +13,7 @@
 <p>The system-level behavior of Neural CAs is affected by:</p>
 <ul><li><strong>Each state within a cell. </strong>States store information which is used for both diversification among cell behaviours and for communication with neighboring cells.</li>
 <li><strong>The model parameters. </strong>These are the actuators and are shared by every Neural CA of the same family. The model parameters can be seen as <i>the way the system works</i>.</li>
-<li><strong>The perceptive field&#x2F;system. </strong>This is how cells perceive their environment. In Neural CAs, we always restrict the perceptive field to be of their 8 nearest neighbors. The way they are perceived is different between the Growing CA and MNIST CA. The Growing CA perceptive field is fixed during training, while the MNIST CA perceptive field is part of the model parameters.</li></ul>
+<li><strong>The perceptive field&#x2F;system. </strong>This is how cells perceive their environment. In Neural CAs, we always restrict the perceptive field to be of their 8 nearest neighbors and themselves. The way they are perceived is different between the Growing CA and MNIST CA. The Growing CA perceptive field is fixed during training, while the MNIST CA perceptive field is part of the model parameters.</li></ul>
 <p>Perturbing any of these components will result in system-level behavioral changes.</p>
 
 <p> We will explore two kinds of adversarial attacks: injecting some adversarial CA into the collective pretrained models; and perturbing the global state of the cells with some adversarial operation.</p>
