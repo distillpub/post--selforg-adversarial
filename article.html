@@ -46,6 +46,8 @@ The original model behavior on test data.</figcaption>
 <li>For each batch and each pixel, the CAs are randomly chosen to be either the pretrained model or the new adversarial one. We used a 10% chance of placing an adversarial CA instead of the pretrained one.</li>
 <li>We train only the adversarial CA parameters and keep the pretrained model frozen.</li></ul>
 
+<p>Note that this adversarial attack only modifies a very small percentage of the overall system, and the goal is to affect every alive cell. Therefore, these adversaries have to somehow learn to communicate deceiving information that cause wrong classifications and further cascades in the propagation of deceiving information by unaware cells. The unaware cells' parameters cannot be changed so the only means of attack by the adversaries is to cause a change in the cells' states. Cells' states are responsible for communication and diversification.</p>
+
 <p>The task is remarkably simple to optimize, approaching convergence in as little as 2000 training steps. Here we show a few examples of test instances.</p>
 <figure>
     <div class="vc">
