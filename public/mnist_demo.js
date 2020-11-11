@@ -1,7 +1,47 @@
-function mnistDemo() {
-    'use strict';
+"use strict"
 
-    const $ = q=>document.querySelector(q);
+function isInViewport(element) {
+  var rect = element.getBoundingClientRect();
+  var html = document.documentElement;
+  var w = window.innerWidth || html.clientWidth;
+  var h = window.innerHeight || html.clientHeight;
+  return rect.top < h && rect.left < w && rect.bottom > 0 && rect.right > 0;
+}
+
+export function mnistDemo(divId, canvasId) {
+    const root = document.getElementById(divId);
+    const $ = q=>root.querySelector(q);
+    const $$ = q => root.querySelectorAll(q);
+    const $$$ = q => document.documentElement.querySelectorAll(q);
+    const mnistCanvas = document.createElement('canvas');
+    const mnistCtx = mnistCanvas.getContext('2d');
+
+    let currDig = 0;
+    let currSample = 0;
+    let uiDigitSamples = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    let eraser = false;
+    let paused = false;
+
+    let drawRadius = 1.0;
+
+    const D = 28 * 2;
+    const [W, H, CH] = [D, D, 20];
+
+    const colors = [
+        [128, 0, 0],
+        [230, 25, 75],
+        [70, 240, 240],
+        [210, 245, 60],
+        [250, 190, 190],
+        [170, 110, 40],
+        [170, 255, 195],
+        [165, 163, 159],
+        [0, 128, 128],
+        [128, 128, 0],
+        [0, 0, 0], // This is the default for digits.
+    ];
+
 
     const decodeFloat32 = b64 =>
         fetch("data:application/octet-binary;base64," + b64)
@@ -25,41 +65,33 @@ function mnistDemo() {
 
     let drawadversaryCkbx = document.getElementById("drawadversary");
 
+
     async function main() {
 
-        const colorLookup = tf.tensor([
-            [128, 0, 0],
-            [230, 25, 75],
-            [70, 240, 240],
-            [210, 245, 60],
-            [250, 190, 190],
-            [170, 110, 40],
-            [170, 255, 195],
-            [165, 163, 159],
-            [0, 128, 128],
-            [128, 128, 0],
-            [0, 0, 0], // This is the default for digits.
-        ], null, 'int32')
+        const canvas = document.getElementById(canvasId);
+        canvas.width = W;
+        canvas.height = H;
+        canvas.style.width = W*10+'px';
+        canvas.style.height = H*10+'px';
+        const ctx = canvas.getContext('2d');
+
+
+        const colorLookup = tf.tensor(colors, null, 'int32');
 
         const weights = await getWeights(WEIGHTS_B64);
         const adv_weights = await getWeights(ADV_WEIGHTS_B64);
-        const initImg = await loadImage('digits.png');
+        //const initImg = await loadImage('digits.png');
 
-        const [W, H, CH] = [140, 140, 20];
+
         const ALIVE_ALPHA = 0.1
         const state = tf.variable(tf.zeros([H, W, CH]))
         window.state = state;
         const livingCoords = [];
         const advLivingCoords = [];
 
-        const canvas = $('canvas');
-        canvas.width = W;
-        canvas.height = H;
-        canvas.style.width = W*4+'px'
-        canvas.style.height = H*4+'px'
-        const ctx = canvas.getContext('2d')
+
         let imageData = ctx.getImageData(0, 0, W, H);
-        ctx.drawImage(initImg, 0, 0);
+        //ctx.drawImage(initImg, 0, 0);
 
 
         const adv_canvas = new OffscreenCanvas(W, H);
@@ -96,6 +128,170 @@ function mnistDemo() {
             state.assign(tf.tensor(buf, state.shape));
         });
         syncCanvas();
+
+
+    // UI RELATED FUNCTIONS
+    async function loadMnistSamples() {
+
+        async function toBmp(url) {
+            return new Promise((resolve,reject) => {
+                let img = document.createElement('img');
+                img.addEventListener('load', function() {
+                    resolve(this);
+                });
+                img.src = url;
+            });
+        }
+        const mnistBmp = await toBmp("mnist.png");  //await (await fetch("mnist.png")).blob());
+        mnistCanvas.width = mnistBmp.width;
+        mnistCanvas.height = mnistBmp.height;
+        mnistCtx.drawImage(mnistBmp,0,0);  
+    }
+
+    function rgb(values) {
+        return 'rgb(' + values.join(', ') + ')';
+    }
+
+    function getDigit(digit, sample) {
+        const x = sample * 28;
+        const y = digit * 28;
+        return mnistCtx.getImageData(x, y, 28, 28);
+    };
+
+    function getDigitTF(digit, sample) {
+        return tf.tensor(new Float32Array(getDigit(digit, sample).data)).reshape([28,28,4]).slice([0,0,2], [28,28,1]).div(255.0);
+    };
+
+    function reset() {
+        ctx.clearRect(0, 0, W, H);
+        adv_ctx.clearRect(0, 0, W, H);
+        const digit = getDigit(currDig, currSample);
+        const toDraw = convertDigitToDraw(digit);
+        const padding = (D - 28)/2.0;
+        ctx.putImageData(toDraw, padding, padding);
+        syncCanvas();
+    }
+
+    function convertDigitToDraw(digit) {
+        let toDraw = new ImageData(28, 28);
+        console.log(toDraw.data[0], toDraw.data[1], toDraw.data[2], toDraw.data[3])
+        for (let i = 0; i < 28 * 28; i++) {
+            // we expect RGBA, so 4 values to process.
+            const p = i*4;
+            if (digit.data[p] > 25) {
+                toDraw.data[p+3] = digit.data[p];
+            }
+        }
+        return toDraw;
+    }
+
+    function switcheroo() {
+        const digit = getDigit(currDig, currSample);
+        const toDraw = convertDigitToDraw(digit);
+        const padding = (D - 28)/2.0;
+        ctx.putImageData(toDraw, padding, padding);
+        syncCanvas();
+    }
+
+    //hacky way to uncolor last thing.
+    async function initUI() {
+        await loadMnistSamples();
+        for (let i = 0; i < 10; i++) {
+          const dcv = document.createElement('canvas');
+          dcv.id = "digit-" + i;
+          dcv.width = 28;
+          dcv.height = 28;
+          const dctx = dcv.getContext('2d');
+          if (i != 0) {
+            dctx.putImageData(getDigit(i, 0), 0, 0)
+          } else {
+            dctx.putImageData(getDigit(i, 1), 0, 0)
+            uiDigitSamples[i] += 1;
+          }
+          dctx.globalCompositeOperation='difference';
+          dctx.fillStyle = 'white';
+          dctx.fillRect(0, 0, 28, 28);
+          dctx.globalCompositeOperation = "screen";
+          dctx.fillStyle = rgb(colors[i]);
+          dctx.fillRect(0, 0, 28, 28);
+          dcv.onclick = () => {
+            // update the digit to show
+            currDig = i;
+            currSample = uiDigitSamples[i];
+            switcheroo();
+            // paint our legend with next digit
+            uiDigitSamples[i] = (uiDigitSamples[i] + 1) % 20;
+            dctx.putImageData(getDigit(i, uiDigitSamples[i]), 0, 0)
+            dctx.globalCompositeOperation='difference';
+            dctx.fillStyle = 'white';
+            dctx.fillRect(0, 0, 28, 28);
+            dctx.globalCompositeOperation = "screen";
+            dctx.fillStyle = rgb(colors[i]);
+            dctx.fillRect(0, 0, 28, 28);
+            console.log("clicked" + i);
+          }
+          $('#pattern-selector').appendChild(dcv);
+        }
+        console.log("loaded");
+        $('#reset').onclick = reset;
+        $('#play-pause').onclick = () => {
+          paused = !paused;
+          updateUI();
+        };
+        $('#eraser').onclick = () => {
+          eraser = true;
+          updateUI();
+        };
+
+        $('#pencil').onclick = () => {
+          eraser = false;
+          updateUI();
+        };
+
+        $('#bin').onclick = () => {
+            ctx.clearRect(0, 0, W, H);
+            adv_ctx.clearRect(0, 0, W, H);
+            syncCanvas();
+        };
+
+        $('#brushSlider').oninput = (e) => {
+          drawRadius = parseFloat(e.target.value)/2.0;
+          updateUI();
+        };
+
+        $$$('.vidoverlay').forEach(e => e.onclick = () => {
+          e.parentNode.getElementsByTagName('video')[0].onended = v => {e.style.opacity = 0.8; v.target.load();};
+          e.parentNode.getElementsByTagName('video')[0].currentTime = 0.0;
+          e.parentNode.getElementsByTagName('video')[0].play();
+          e.style.opacity = '0';
+        })
+
+        $('#hueSlider').oninput = (e) => {
+            let hue = parseFloat(e.target.value);
+            $('#hueValue').innerText = hue;
+            console.log($$$('.color_heavy, filter'));
+            $$$('.color_heavy, figure').forEach(e => {e.style.filter = "hue-rotate(" + hue + "deg)"});
+        };
+        console.log("loaded");
+        $('#speed').onchange = updateUI;
+        $('#speed').oninput = updateUI;
+        updateUI();
+    };
+    function updateUI() {
+        $('#play').style.display = paused ? "inline" : "none";
+        $('#pause').style.display = !paused ? "inline" : "none";
+        $('#eraser').style.filter = !eraser ? "grayscale() opacity(0.7)" : "";
+        $('#pencil').style.filter = eraser ? "grayscale() opacity(0.7)" : "";
+        const speed = parseInt($('#speed').value);
+        $('#speedLabel').innerHTML = ['1/60 x', '1/10 x', '1/2 x', '1 x', '2 x', '4 x', '<b>max</b>'][speed + 3];
+        $('#radius').innerText = ( (eraser) ? drawRadius * 5.0 : drawRadius);
+    };
+
+
+        await initUI();
+
+        // initialize state with a digit.
+        reset();
 
         const hood1d = [-1, 0, 1];
         //const hood2d = tf.tensor(hood1d.map(y=>hood1d.map(x=>[y, x])).flat(), null, 'int32');
@@ -163,8 +359,7 @@ function mnistDemo() {
         step(); // warm up
 
 
-        let drawRadius = 1.0;
-        const isErasing = e=>!$("#pen").checked || e.shiftKey;
+        const isErasing = e=> e.shiftKey;
 
 
         ctx.strokeStyle = "#000000";
@@ -173,7 +368,7 @@ function mnistDemo() {
         adv_ctx.fillStyle = "#000000";
         const line = (x0, y0, x1, y1, e) => {
             let r = drawRadius;
-            if (isErasing(e)) {
+            if (eraser || isErasing(e)) {
                 ctx.globalCompositeOperation = "destination-out";
                 r *= 5.0;
             }
@@ -184,8 +379,8 @@ function mnistDemo() {
             ctx.stroke();
             ctx.globalCompositeOperation = "source-over";
 
-            if (drawadversaryCkbx.checked || isErasing(e)) {
-                if (isErasing(e)) {
+            if (drawadversaryCkbx.checked || eraser || isErasing(e)) {
+                if (eraser || isErasing(e)) {
                     adv_ctx.globalCompositeOperation = "destination-out";
                 }
                 adv_ctx.lineWidth = r*2.0;
@@ -210,12 +405,12 @@ function mnistDemo() {
         }
 
         const circle = (x, y, e) => {
-            if (drawadversaryCkbx.checked && !isErasing(e)) {
+            if (drawadversaryCkbx.checked && !(eraser || isErasing(e))) {
                 pointDraw(x, y);
                 return;
             }
             let r = drawRadius;
-            if (isErasing(e)) {
+            if (eraser || isErasing(e)) {
                 ctx.globalCompositeOperation = "destination-out";
                 r *= 5.0;
             }
@@ -223,7 +418,7 @@ function mnistDemo() {
             ctx.arc(x, y, r, 0, 2 * Math.PI);
             ctx.fill();
             ctx.globalCompositeOperation = "source-over";
-            if (drawadversaryCkbx.checked && isErasing(e)) {
+            if (drawadversaryCkbx.checked && (eraser || isErasing(e))) {
                 // the isErasing call is superfluous, but kept for clarity.
                 adv_ctx.globalCompositeOperation = "destination-out";
                 adv_ctx.beginPath();
@@ -294,35 +489,24 @@ function mnistDemo() {
             lastTouchList = e.touches; 
         });
 
-        $('#clearBtn').onclick = ()=>{
-            ctx.clearRect(0, 0, W, H);
-            adv_ctx.clearRect(0, 0, W, H);
-            syncCanvas();
-        }
-        $('#resetBtn').onclick = ()=>{
-            ctx.clearRect(0, 0, W, H);
-            adv_ctx.clearRect(0, 0, W, H);
-            syncCanvas();
-            ctx.drawImage(initImg, 0, 0);
-            syncCanvas();
-        }
         $('#removeadvBtn').onclick = ()=>{
             adv_ctx.clearRect(0, 0, W, H);
             syncCanvas();
         }
 
         function render() {
-            const t0 = Date.now();
-            step();
-            const dt = Math.max(Date.now()-t0, 1);
-            const fps = Math.round(1000.0 / dt);
-            $('#log').innerText = `${fps} fps`
-            ctx.putImageData(imageData, 0, 0)
+            if (!paused && isInViewport(canvas)) {
+                const t0 = Date.now();
+                step();
+                const dt = Math.max(Date.now()-t0, 1);
+                const fps = Math.round(1000.0 / dt);
+                $('#log').innerText = `${fps} fps`
+                ctx.putImageData(imageData, 0, 0)
+            }
             requestAnimationFrame(render);
         }
-        render();
+        requestAnimationFrame(render);
     }
 
     tf.setBackend('wasm').then(main);
 }
-mnistDemo();
