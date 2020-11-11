@@ -8,7 +8,7 @@
 
 <p>In a complex system, whether biological, technological, or social, how can we discover signaling events that will alter system-level behavior in desired ways? Even when the rules governing the behavior of subunits are known, this difficult inverse problem is at the heart of many barriers in biomedicine, robotics, and other fields of importance to society.</p>
 
-<p>In this work, we explore further the robustness of these models by <i>training adversaries </i>whose goal is to reprogram the CAs into doing something other than what they were trained to do. In order to understand what kind of signaling or change in a system could alter system-level behavior of our CAs, it is important to understand how these CAs are constructed and where information resides within their aggregate configurations.</p>
+<p>In this work, we explore further the robustness of these models by <i>training adversaries </i>whose goal is to reprogram the CAs into doing something other than what they were trained to do. In order to understand what kind of signaling or change in a system could alter system-level behavior of our CAs, it is important to understand how these CAs are constructed and where both local and global information resides within their aggregate configurations.</p>
 
 <p>The system-level behavior of Neural CAs is affected by:</p>
 <ul><li><strong>Each state within a cell. </strong>States store information which is used for both diversification among cell behaviours and for communication with neighboring cells.</li>
@@ -167,7 +167,7 @@ Adversaries on 60% of the cells. At 500 steps, we stop the image and show only c
 <h1>Perturbing the states of Growing CAs</h1>
 <p>We observed that it was hard to fool growing CAs into changing their morphology by placing viruses inside them. These adversaries had to devise complex and local behaviors that would cause the states of original cells nearby, and ultimately globally, to change their morphology.</p>
 <p>In this section, we explore how we can circumvent this added difficulty of indirect behavioral change from local interactions, by performing global state changes.</p>
-<p>We again focus on Growing CAs and we choose the lizard pattern again for illustrative purposes. Every cell of a growing CA consists of a group of 16 states, some of them phenotypical (RGBA states) and the remaining 12 of arbitrary purposes, generally used for storing and communicating information. As we emphasized multiple times, because the states of every cell are used to understand what to do and communicate with each other, we can perturb the states of these cells to hijack the overall system in certain ways. There are a variety of ways we can perform state perturbations. We will focus on <i>global state perturbations</i>, defined as perturbations that are applied on every alive cell in every time step. The new goal is to discover a certain type of global state perturbation that results in a stable new pattern.</p>
+<p>We again focus on Growing CAs and we choose the lizard pattern again for illustrative purposes. Every cell of a growing CA consists of a group of 16 states, some of them phenotypical (RGBA states) and the remaining 12 of arbitrary purposes, generally used for storing and communicating information. As we emphasized above, because the states of every cell are used to understand what to do and communicate with each other, we can perturb the states of these cells to hijack the overall system in certain ways (discovery of such perturbation strategies is a key goal of biomedicine and synthetic morphology). There are a variety of ways we can perform state perturbations. We will focus on <i>global state perturbations</i>, defined as perturbations that are applied on every alive cell in every time step (analogous to "systemic" biomedical interventions, that are given to the whole organism (e.g., a chemical take internally), as opposed to highly localized delivery systems).. The new goal is to discover a certain type of global state perturbation that results in a stable new pattern.</p>
 <figure>
 <img src='images/drawing_template_lizard_perturbation.jpg' style='width: 650px'>
 <figcaption>Diagram showing some possible stages for perturbing a lizard pattern. (a) We start from a seed that grows into a lizard (b). (c) We perform a global state perturbation at every step and the lizard loses its tail. (d) Empirically, when we stop perturbing the state we observe the lizard to grow back its tail.</figcaption>
@@ -269,9 +269,19 @@ Your browser does not support the video tag.
 Demonstration of the playground.</figcaption>
 </figure>
 
-<iframe src="mutating_gca_demo.html" scrolling="no" frameborder="0"
-    style="position: relative; height: 600px; width: 100%;"
+<iframe id="mnistDemoIframe" src="demo.html" scrolling="no" frameborder="0"
+    style="position: relative; height: 100px; width: 100px;"
 ></iframe>
+<script>
+    var iframe = document.getElementById("mnistDemoIframe");
+    
+    iframe.onload = function(){
+        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+        iframe.style.width = '100%';
+    };
+    window.onresize = iframe.onload;
+</script>
+
 
 <h1>Related work</h1>
 <p><strong>ML:</strong></p>
