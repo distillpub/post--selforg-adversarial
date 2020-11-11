@@ -130,162 +130,162 @@ export function mnistDemo(divId, canvasId) {
         syncCanvas();
 
 
-    // UI RELATED FUNCTIONS
-    async function loadMnistSamples() {
+        // UI RELATED FUNCTIONS
+        async function loadMnistSamples() {
 
-        async function toBmp(url) {
-            return new Promise((resolve,reject) => {
-                let img = document.createElement('img');
-                img.addEventListener('load', function() {
-                    resolve(this);
+            async function toBmp(url) {
+                return new Promise((resolve,reject) => {
+                    let img = document.createElement('img');
+                    img.addEventListener('load', function() {
+                        resolve(this);
+                    });
+                    img.src = url;
                 });
-                img.src = url;
-            });
-        }
-        const mnistBmp = await toBmp("mnist.png");  //await (await fetch("mnist.png")).blob());
-        mnistCanvas.width = mnistBmp.width;
-        mnistCanvas.height = mnistBmp.height;
-        mnistCtx.drawImage(mnistBmp,0,0);  
-    }
-
-    function rgb(values) {
-        return 'rgb(' + values.join(', ') + ')';
-    }
-
-    function getDigit(digit, sample) {
-        const x = sample * 28;
-        const y = digit * 28;
-        return mnistCtx.getImageData(x, y, 28, 28);
-    };
-
-    function getDigitTF(digit, sample) {
-        return tf.tensor(new Float32Array(getDigit(digit, sample).data)).reshape([28,28,4]).slice([0,0,2], [28,28,1]).div(255.0);
-    };
-
-    function reset() {
-        ctx.clearRect(0, 0, W, H);
-        adv_ctx.clearRect(0, 0, W, H);
-        const digit = getDigit(currDig, currSample);
-        const toDraw = convertDigitToDraw(digit);
-        const padding = (D - 28)/2.0;
-        ctx.putImageData(toDraw, padding, padding);
-        syncCanvas();
-    }
-
-    function convertDigitToDraw(digit) {
-        let toDraw = new ImageData(28, 28);
-        console.log(toDraw.data[0], toDraw.data[1], toDraw.data[2], toDraw.data[3])
-        for (let i = 0; i < 28 * 28; i++) {
-            // we expect RGBA, so 4 values to process.
-            const p = i*4;
-            if (digit.data[p] > 25) {
-                toDraw.data[p+3] = digit.data[p];
             }
+            const mnistBmp = await toBmp("mnist.png");  //await (await fetch("mnist.png")).blob());
+            mnistCanvas.width = mnistBmp.width;
+            mnistCanvas.height = mnistBmp.height;
+            mnistCtx.drawImage(mnistBmp,0,0);  
         }
-        return toDraw;
-    }
 
-    function switcheroo() {
-        const digit = getDigit(currDig, currSample);
-        const toDraw = convertDigitToDraw(digit);
-        const padding = (D - 28)/2.0;
-        ctx.putImageData(toDraw, padding, padding);
-        syncCanvas();
-    }
-
-    //hacky way to uncolor last thing.
-    async function initUI() {
-        await loadMnistSamples();
-        for (let i = 0; i < 10; i++) {
-          const dcv = document.createElement('canvas');
-          dcv.id = "digit-" + i;
-          dcv.width = 28;
-          dcv.height = 28;
-          const dctx = dcv.getContext('2d');
-          if (i != 0) {
-            dctx.putImageData(getDigit(i, 0), 0, 0)
-          } else {
-            dctx.putImageData(getDigit(i, 1), 0, 0)
-            uiDigitSamples[i] += 1;
-          }
-          dctx.globalCompositeOperation='difference';
-          dctx.fillStyle = 'white';
-          dctx.fillRect(0, 0, 28, 28);
-          dctx.globalCompositeOperation = "screen";
-          dctx.fillStyle = rgb(colors[i]);
-          dctx.fillRect(0, 0, 28, 28);
-          dcv.onclick = () => {
-            // update the digit to show
-            currDig = i;
-            currSample = uiDigitSamples[i];
-            switcheroo();
-            // paint our legend with next digit
-            uiDigitSamples[i] = (uiDigitSamples[i] + 1) % 20;
-            dctx.putImageData(getDigit(i, uiDigitSamples[i]), 0, 0)
-            dctx.globalCompositeOperation='difference';
-            dctx.fillStyle = 'white';
-            dctx.fillRect(0, 0, 28, 28);
-            dctx.globalCompositeOperation = "screen";
-            dctx.fillStyle = rgb(colors[i]);
-            dctx.fillRect(0, 0, 28, 28);
-            console.log("clicked" + i);
-          }
-          $('#pattern-selector').appendChild(dcv);
+        function rgb(values) {
+            return 'rgb(' + values.join(', ') + ')';
         }
-        console.log("loaded");
-        $('#reset').onclick = reset;
-        $('#play-pause').onclick = () => {
-          paused = !paused;
-          updateUI();
-        };
-        $('#eraser').onclick = () => {
-          eraser = true;
-          updateUI();
+
+        function getDigit(digit, sample) {
+            const x = sample * 28;
+            const y = digit * 28;
+            return mnistCtx.getImageData(x, y, 28, 28);
         };
 
-        $('#pencil').onclick = () => {
-          eraser = false;
-          updateUI();
+        function getDigitTF(digit, sample) {
+            return tf.tensor(new Float32Array(getDigit(digit, sample).data)).reshape([28,28,4]).slice([0,0,2], [28,28,1]).div(255.0);
         };
 
-        $('#bin').onclick = () => {
+        function reset() {
             ctx.clearRect(0, 0, W, H);
             adv_ctx.clearRect(0, 0, W, H);
+            const digit = getDigit(currDig, currSample);
+            const toDraw = convertDigitToDraw(digit);
+            const padding = (D - 28)/2.0;
+            ctx.putImageData(toDraw, padding, padding);
             syncCanvas();
-        };
+        }
 
-        $('#brushSlider').oninput = (e) => {
-          drawRadius = parseFloat(e.target.value)/2.0;
-          updateUI();
-        };
+        function convertDigitToDraw(digit) {
+            let toDraw = new ImageData(28, 28);
+            console.log(toDraw.data[0], toDraw.data[1], toDraw.data[2], toDraw.data[3])
+            for (let i = 0; i < 28 * 28; i++) {
+                // we expect RGBA, so 4 values to process.
+                const p = i*4;
+                if (digit.data[p] > 25) {
+                    toDraw.data[p+3] = digit.data[p];
+                }
+            }
+            return toDraw;
+        }
 
-        $$$('.vidoverlay').forEach(e => e.onclick = () => {
-          e.parentNode.getElementsByTagName('video')[0].onended = v => {e.style.opacity = 0.8; v.target.load();};
-          e.parentNode.getElementsByTagName('video')[0].currentTime = 0.0;
-          e.parentNode.getElementsByTagName('video')[0].play();
-          e.style.opacity = '0';
-        })
+        function switcheroo() {
+            const digit = getDigit(currDig, currSample);
+            const toDraw = convertDigitToDraw(digit);
+            const padding = (D - 28)/2.0;
+            ctx.putImageData(toDraw, padding, padding);
+            syncCanvas();
+        }
 
-        $('#hueSlider').oninput = (e) => {
-            let hue = parseFloat(e.target.value);
-            $('#hueValue').innerText = hue;
-            console.log($$$('.color_heavy, filter'));
-            $$$('.color_heavy, figure').forEach(e => {e.style.filter = "hue-rotate(" + hue + "deg)"});
+        //hacky way to uncolor last thing.
+        async function initUI() {
+            await loadMnistSamples();
+            for (let i = 0; i < 10; i++) {
+              const dcv = document.createElement('canvas');
+              dcv.id = "digit-" + i;
+              dcv.width = 28;
+              dcv.height = 28;
+              const dctx = dcv.getContext('2d');
+              if (i != 0) {
+                dctx.putImageData(getDigit(i, 0), 0, 0)
+              } else {
+                dctx.putImageData(getDigit(i, 1), 0, 0)
+                uiDigitSamples[i] += 1;
+              }
+              dctx.globalCompositeOperation='difference';
+              dctx.fillStyle = 'white';
+              dctx.fillRect(0, 0, 28, 28);
+              dctx.globalCompositeOperation = "screen";
+              dctx.fillStyle = rgb(colors[i]);
+              dctx.fillRect(0, 0, 28, 28);
+              dcv.onclick = () => {
+                // update the digit to show
+                currDig = i;
+                currSample = uiDigitSamples[i];
+                switcheroo();
+                // paint our legend with next digit
+                uiDigitSamples[i] = (uiDigitSamples[i] + 1) % 20;
+                dctx.putImageData(getDigit(i, uiDigitSamples[i]), 0, 0)
+                dctx.globalCompositeOperation='difference';
+                dctx.fillStyle = 'white';
+                dctx.fillRect(0, 0, 28, 28);
+                dctx.globalCompositeOperation = "screen";
+                dctx.fillStyle = rgb(colors[i]);
+                dctx.fillRect(0, 0, 28, 28);
+                console.log("clicked" + i);
+              }
+              $('#pattern-selector').appendChild(dcv);
+            }
+            console.log("loaded");
+            $('#reset').onclick = reset;
+            $('#play-pause').onclick = () => {
+              paused = !paused;
+              updateUI();
+            };
+            $('#eraser').onclick = () => {
+              eraser = true;
+              updateUI();
+            };
+
+            $('#pencil').onclick = () => {
+              eraser = false;
+              updateUI();
+            };
+
+            $('#bin').onclick = () => {
+                ctx.clearRect(0, 0, W, H);
+                adv_ctx.clearRect(0, 0, W, H);
+                syncCanvas();
+            };
+
+            $('#brushSlider').oninput = (e) => {
+              drawRadius = parseFloat(e.target.value)/2.0;
+              updateUI();
+            };
+
+            $$$('.vidoverlay').forEach(e => e.onclick = () => {
+              e.parentNode.getElementsByTagName('video')[0].onended = v => {e.style.opacity = 0.8; v.target.load();};
+              e.parentNode.getElementsByTagName('video')[0].currentTime = 0.0;
+              e.parentNode.getElementsByTagName('video')[0].play();
+              e.style.opacity = '0';
+            })
+
+            $('#hueSlider').oninput = (e) => {
+                let hue = parseFloat(e.target.value);
+                $('#hueValue').innerText = hue;
+                console.log($$$('.color_heavy, filter'));
+                $$$('.color_heavy, figure').forEach(e => {e.style.filter = "hue-rotate(" + hue + "deg)"});
+            };
+            console.log("loaded");
+            $('#speed').onchange = updateUI;
+            $('#speed').oninput = updateUI;
+            updateUI();
         };
-        console.log("loaded");
-        $('#speed').onchange = updateUI;
-        $('#speed').oninput = updateUI;
-        updateUI();
-    };
-    function updateUI() {
-        $('#play').style.display = paused ? "inline" : "none";
-        $('#pause').style.display = !paused ? "inline" : "none";
-        $('#eraser').style.filter = !eraser ? "grayscale() opacity(0.7)" : "";
-        $('#pencil').style.filter = eraser ? "grayscale() opacity(0.7)" : "";
-        const speed = parseInt($('#speed').value);
-        $('#speedLabel').innerHTML = ['1/60 x', '1/10 x', '1/2 x', '1 x', '2 x', '4 x', '<b>max</b>'][speed + 3];
-        $('#radius').innerText = ( (eraser) ? drawRadius * 5.0 : drawRadius);
-    };
+        function updateUI() {
+            $('#play').style.display = paused ? "inline" : "none";
+            $('#pause').style.display = !paused ? "inline" : "none";
+            $('#eraser').style.filter = !eraser ? "grayscale() opacity(0.7)" : "";
+            $('#pencil').style.filter = eraser ? "grayscale() opacity(0.7)" : "";
+            const speed = parseInt($('#speed').value);
+            $('#speedLabel').innerHTML = ['1/60 x', '1/10 x', '1/2 x', '1 x', '2 x', '4 x', '<b>max</b>'][speed + 3];
+            $('#radius').innerText = ( (eraser) ? drawRadius * 5.0 : drawRadius);
+        };
 
 
         await initUI();
@@ -395,11 +395,20 @@ export function mnistDemo(divId, canvasId) {
 
         // make it a point!
         const pointDraw = (x, y) => {
+            let px = ctx.getImageData(x,y,1,1);
+            px.data[0] = 0;
+            px.data[1] = 0;
+            px.data[2] = 0;
+            px.data[3] = 255;
+            ctx.putImageData(px,x,y);
+
             ctx.fillRect(x, y, 1, 1);
             ctx.globalCompositeOperation = "source-over";
             if (drawadversaryCkbx.checked) {
                 // Perform surgical insertion of 1 pixel only.
-                adv_ctx.fillRect(x, y, 1, 1);
+                adv_ctx.putImageData(px,x,y);
+
+                //adv_ctx.fillRect(x, y, 1, 1);
                 adv_ctx.globalCompositeOperation = "source-over";
             }
         }
