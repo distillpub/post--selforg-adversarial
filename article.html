@@ -97,9 +97,19 @@ Your browser does not support the video tag.
 Playground video to be replaced by the real playground.</figcaption>
 </figure>
 
-<iframe src="demo.html" scrolling="no" frameborder="0"
-    style="position: relative; height: 700px; width: 100%;"
+<iframe id="mnistDemoIframe" src="demo.html" scrolling="no" frameborder="0"
+    style="position: relative; height: 100px; width: 100px;"
 ></iframe>
+<script>
+    var iframe = document.getElementById("mnistDemoIframe");
+    
+    iframe.onload = function(){
+        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+        iframe.style.width = '100%';
+    };
+    window.onresize = iframe.onload;
+</script>
+
 <h1>Adversarial Injections for Growing CAs</h1>
 <p>One question we may ask is whether the same kind of adversarial attack that was successful for the MNIST CA would work for the Growing CA model too. The Growing CA models' goals are to be able to grow a complex image pattern from a small seed, and having its result being persistent over time and robust to significant perturbations. In this article, we will focus on the lizard pattern.</p>
 <figure>
@@ -269,19 +279,9 @@ Your browser does not support the video tag.
 Demonstration of the playground.</figcaption>
 </figure>
 
-<iframe id="mnistDemoIframe" src="demo.html" scrolling="no" frameborder="0"
-    style="position: relative; height: 100px; width: 100px;"
+<iframe src="mutating_gca_demo.html" scrolling="no" frameborder="0"
+    style="position: relative; height: 600px; width: 100%;"
 ></iframe>
-<script>
-    var iframe = document.getElementById("mnistDemoIframe");
-    
-    iframe.onload = function(){
-        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
-        iframe.style.width = '100%';
-    };
-    window.onresize = iframe.onload;
-</script>
-
 
 <h1>Related work</h1>
 <p><strong>ML:</strong></p>
