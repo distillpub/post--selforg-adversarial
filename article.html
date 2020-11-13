@@ -281,7 +281,7 @@ Demonstration of the playground.</figcaption>
 
 <h1>Related work</h1>
 <p>This work is inspired by Generative Adversarial Networks (GANs) <d-cite key="goodfellow2014generative"></d-cite>. While with GANs it is typical to cotrain pairs of models, in this work we froze the original CAs and trained the adversaries only. This is to the greatest degree inspired by the seminal work <i>Adversarial Reprogramming of Neural Networks </i><d-cite key="elsayed2018adversarial"></d-cite>.</p>
-<p>The kinds of state perturbations performed in this article can be seen as targeted latent state manipulations. Word2vec <d-cite key="mikolov2013efficient"></d-cite> shows how latent vector representations can have compositional properties and it was of great inspiration to us.</p>
+<p>The kinds of state perturbations performed in this article can be seen as targeted latent state manipulations. Word2vec <d-cite key="mikolov2013efficient"></d-cite> shows how latent vector representations can have compositional properties and Fader Networks <d-cite key="lample2018fader"></d-cite> show similar behaviors for image processing. Both of these works and their related work were of great inspiration to us.</p>
 <h1>Discussion</h1>
 <p>This article showed two different kinds of adversarial attacks that Neural CAs are susceptible to.</p>
 
@@ -290,7 +290,7 @@ Demonstration of the playground.</figcaption>
 
 <p>This kind of attack was much less effective against Growing CAs. On the one end, this is a positive property to have for engineering systems. On the other hand, this dynamic is also of importance to the scaling of control mechanisms (swarm robotics and nested architectures): a key step in "multicellularity" (joining together to form larger systems from sub-agents <d-cite key="levin2019theComp"></d-cite>) is informational fusion, which makes it difficult to identify the source of signals and memory engrams. An optimal architecture would need to balance the need for validating control messages with a possibility of flexible merging of subunits, which wipes out metadata about the specific source of informational signals. Likewise, the ability to respond successfully to novel environmental challenges is an important goal for autonomous artificial systems, which may import from biology strategies that optimize tradeoff between maintaining a specific set of signals and being flexible enough to establish novel signaling regimes when needed.</p>
 
-<p>The global state perturbation experiment on Growing CAs shows how it is still possible to hijack these CAs towards stable out-of-training configurations and how these kind of attacks are somewhat composable in a similar way to how embeddings spaces are manipulable in the natural language processing and computer vision fields [cite!]. However, this experiment failed to discover stable out-of-training configurations <i>after the perturbation was lifted</i>. [Biological comment on how this is not desirable.]</p>
+<p>The global state perturbation experiment on Growing CAs shows how it is still possible to hijack these CAs towards stable out-of-training configurations and how these kinds of attacks are somewhat composable in a similar way to how embeddings spaces are manipulable in the natural language processing and computer vision fields <d-cite key="mikolov2013efficient,lample2018fader"></d-cite>. However, this experiment failed to discover stable out-of-training configurations <i>after the perturbation was lifted</i>. [Biological comment on how this is not desirable.]</p>
 
 </d-article>
 <d-appendix>
