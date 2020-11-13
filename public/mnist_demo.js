@@ -186,6 +186,10 @@ export function mnistDemo(divId, canvasId) {
         }
 
         function switcheroo() {
+            // reset the canvas too.
+            ctx.clearRect(0, 0, W, H);
+            adv_ctx.clearRect(0, 0, W, H);
+            // get the next digit.
             const digit = getDigit(currDig, currSample);
             const toDraw = convertDigitToDraw(digit);
             const padding = (D - 28)/2.0;
