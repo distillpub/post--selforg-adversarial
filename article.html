@@ -81,18 +81,6 @@ Your browser does not support the video tag.
 Adversaries on 1% of the cells (black pixels).</figcaption>
 </figure>
 <p>We created a demo playground where the reader can draw digits and place adversaries with surgical precision. We encourage the reader to play with the demo to get a sense on how easily innocent cells can get swayed towards the wrong outcomes. </p>
-<figure>
-    <div class="vc">
-    <div class="vidoverlay"></div>
-    <video playsinline muted width="640px" preload="auto">
-      <source src="images/mnist_adversary_playground.mp4#t=3.0" type="video/mp4">
-Your browser does not support the video tag.
-    </video>
-    </div>
-<figcaption style="">
-Playground video to be replaced by the real playground.</figcaption>
-</figure>
-
 <iframe id="mnistDemoIframe" src="demo.html" scrolling="no" frameborder="0"
     style="position: relative; height: 100px; width: 100px;"
 ></iframe>
@@ -262,18 +250,7 @@ Effect of composing two trained perturbations.</figcaption>
 <p>Surprisingly, the resulting pattern is almost like we would desire it to be. It is evidently not perfect as it is sliding upwards even faster than the other combinations we tried, showing it's even less stable than them.</p>
 
 <p>The arguments we used can be generalized to any arbitrary number of perturbations. We created a small playground that allows the reader to input their desired combinations. Empirically, we were surprised by how many of these combinations result in good perturbations and it appears true that keeping k bound to 1 results in generally more stable patterns. We also observed how going the opposite direction from a perturbation is usually much more unstable.</p>
-<p>Below there is a video showing the playground and the playground underneath.</p>
-<figure>
-    <div class="vc">
-    <div class="vidoverlay"></div>
-    <video playsinline muted width="640px" preload="auto">
-      <source src="images/perturbation_playground.mp4#t=3.0" type="video/mp4">
-Your browser does not support the video tag.
-    </video>
-    </div>
-<figcaption style="">
-Demonstration of the playground.</figcaption>
-</figure>
+<p>Below there is a playground to experiment with these compositional perturbations.</p>
 
 <iframe src="mutating_gca_demo.html" scrolling="no" frameborder="0"
     style="position: relative; height: 600px; width: 100%;"
