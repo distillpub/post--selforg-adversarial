@@ -353,7 +353,7 @@ export function mnistDemo(divId, canvasId) {
                 for (let i=0; i<advLivingCoords.length; ++i) {
                     const [y, x] = advLivingCoords[i];
                     const p = (y*W+x)*4;
-                    imageData.data[p] = colors[i*3] * onemt + (15 * t);
+                    imageData.data[p] = colors[i*3] * onemt + (255 * t);
                     imageData.data[p+1] = colors[i*3+1] * onemt;
                     imageData.data[p+2] = colors[i*3+2] * onemt;
                 }
