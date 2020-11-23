@@ -27,7 +27,7 @@
 
 <figure>
     <div class="vc">
-    <div class="vidoverlay"></div>
+    
     <video controls playsinline muted width="640px" preload="auto">
       <source src="images/mnist_orig_mosaic.mp4#t=0.1" type="video/mp4">
 Your browser does not support the video tag.
@@ -47,7 +47,7 @@ The original model behavior on test data.</figcaption>
 <p>The task is remarkably simple to optimize, approaching convergence in as little as 2000 training steps. Here we show a few examples of test instances.</p>
 <figure>
     <div class="vc">
-    <div class="vidoverlay"></div>
+    
     <video controls playsinline muted width="640px" preload="auto">
       <source src="images/mnist_10perc_adv_mosaic.mp4#t=0.1" type="video/mp4">
 Your browser does not support the video tag.
@@ -59,7 +59,7 @@ Adversaries on 10% of the cells (black pixels).</figcaption>
 <p>The adversaries are constantly communicating with their neighbors to keep them convinced of the wrong classification. We can see that by visualising what happens when we remove the adversaries after 200 steps. While some digits don't recover, most of them self-correct to the right classification.</p>
 <figure>
     <div class="vc">
-    <div class="vidoverlay"></div>
+    
     <video controls playsinline muted width="640px" preload="auto">
       <source src="images/mnist_10perc_adv_reset_mosaic.mp4#t=0.1" type="video/mp4">
 Your browser does not support the video tag.
@@ -71,7 +71,7 @@ We remove the adversaries (black pixels) after 200 steps. Most digits recover, b
 <p>While we trained the adversaries with a 10% distribution, we can observe that very often we need significantly fewer adversaries to steer the entire classification towards an 8. Here is a test run with 1% of cells being adversaries.</p>
 <figure>
     <div class="vc">
-    <div class="vidoverlay"></div>
+    
     <video controls playsinline muted width="640px" preload="auto">
       <source src="images/mnist_1perc_adv_mosaic.mp4#t=0.1" type="video/mp4">
 Your browser does not support the video tag.
@@ -97,7 +97,7 @@ Adversaries on 1% of the cells (black pixels).</figcaption>
 <p>One question we may ask is whether the same kind of adversarial attack that was successful for the MNIST CA would work for the Growing CA model too. The Growing CA models' goals are to be able to grow a complex image pattern from a small seed, and having its result being persistent over time and robust to significant perturbations. In this article, we will focus on the lizard pattern.</p>
 <figure>
     <div class="vc">
-    <div class="vidoverlay"></div>
+    
     <video controls playsinline muted width="450px" preload="auto">
       <source src="images/lizard_complete_video.mp4#t=3.0" type="video/mp4">
 Your browser does not support the video tag.
@@ -121,7 +121,7 @@ The target CA to hijack.</figcaption>
 
 <figure>
     <div class="vc">
-    <div class="vidoverlay"></div>
+    
     <video controls playsinline muted width="640px" preload="auto">
       <source src="images/lizard_no_tail_virus_mosaic.mp4#t=3.0" type="video/mp4">
 Your browser does not support the video tag.
@@ -139,7 +139,7 @@ Adversaries on 10% of the cells.</figcaption>
 
 <figure>
     <div class="vc">
-    <div class="vidoverlay"></div>
+    
     <video controls playsinline muted width="640px" preload="auto">
       <source src="images/lizard_red_virus_single_run.mp4#t=3.0" type="video/mp4">
 Your browser does not support the video tag.
@@ -179,7 +179,7 @@ Adversaries on 60% of the cells. At 500 steps, we stop the image and show only c
 <li>We consider initial image configurations to be both a seed and a fully grown lizard (as opposed to the Growing CA article, where initial configurations were seeds only).</li></ul>
 <figure>
     <div class="vc">
-    <div class="vidoverlay"></div>
+    
     <video controls playsinline muted width="640px" preload="auto">
       <source src="images/mutations_mosaic_video.mp4#t=3.0" type="video/mp4">
 Your browser does not support the video tag.
@@ -203,7 +203,7 @@ Effect of applying the trained perturbations.</figcaption>
 <p>Let us then take the tailless perturbation and see what happens as we vary k:</p>
 <figure>
     <div class="vc">
-    <div class="vidoverlay"></div>
+    
     <video controls playsinline muted width="640px" preload="auto">
       <source src="images/tail_direction_mosaic.mp4#t=3.0" type="video/mp4">
 Your browser does not support the video tag.
@@ -224,7 +224,7 @@ Effect of following the direction of the tail perturbation.</figcaption>
 <p>Now let us take a look at two perturbations, tailless and no leg lizards, and interpolate their direction coefficients by keeping their sums equal to 1:</p>
 <figure>
     <div class="vc">
-    <div class="vidoverlay"></div>
+    
     <video controls playsinline muted width="640px" preload="auto">
       <source src="images/lizard_combinations_mosaic.mp4#t=3.0" type="video/mp4">
 Your browser does not support the video tag.
@@ -237,7 +237,7 @@ Effect of composing two trained perturbations while keeping the sum of k=1.</fig
 <p>We now show what happens when we combine the tailless and the no leg lizard perturbations at their fullest. Note that when we set both k to 1, the resulting perturbation is equal to the sum of the two perturbations minus an identity matrix.</p>
 <figure>
     <div class="vc">
-    <div class="vidoverlay"></div>
+    
     <video controls playsinline muted width="320px" preload="auto">
       <source src="images/combination_of_mutations.mp4#t=3.0" type="video/mp4">
 Your browser does not support the video tag.
