@@ -1,5 +1,13 @@
 'use strict';
 
+function isInViewport(element) {
+  var rect = element.getBoundingClientRect();
+  var html = document.documentElement;
+  var w = window.innerWidth || html.clientWidth;
+  var h = window.innerHeight || html.clientHeight;
+  return rect.top < h && rect.left < w && rect.bottom > 0 && rect.right > 0;
+}
+
 function mutatingGCADemo() {
   const $ = q=>document.querySelector(q);
 
@@ -307,6 +315,10 @@ function mutatingGCADemo() {
     }
 
     function render() {
+      if (!isInViewport(canvas)) {
+        requestAnimationFrame(render);
+        return;
+      } 
       step();
 
       const imageData = tf.tidy(()=>{
