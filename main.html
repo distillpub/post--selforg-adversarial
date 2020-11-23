@@ -244,7 +244,7 @@
   <script>
     const $$$ = q => document.documentElement.querySelectorAll(q);
     $$$('video').forEach(vid => {
-      vid.onplay => {vid.currentTime = 0; vid.onplay = null;};
+      vid.onplay = () => {vid.currentTime = 0; vid.onplay = null;};
     });
   </script>
 </body>
