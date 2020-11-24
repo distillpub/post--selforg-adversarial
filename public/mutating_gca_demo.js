@@ -1,13 +1,14 @@
 'use strict';
 
 function isInViewport(element) {
-  var rect = element.getBoundingClientRect();
-  var html = document.documentElement;
-  var w = window.innerWidth || html.clientWidth;
-  var h = window.innerHeight || html.clientHeight;
-  return rect.top < h && rect.left < w && rect.bottom > 0 && rect.right > 0;
+  const frameRect = window.frameElement.getBoundingClientRect();
+  const rect = element.getBoundingClientRect();
+  const px = frameRect.left;
+  const py = frameRect.top;
+  const w = window.top.innerWidth;
+  const h = window.top.innerHeight;
+  return rect.top+py < h && rect.left+px < w && rect.bottom+py > 0 && rect.right+px > 0;
 }
-
 function mutatingGCADemo() {
   const $ = q=>document.querySelector(q);
 
