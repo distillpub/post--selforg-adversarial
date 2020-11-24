@@ -243,27 +243,8 @@
   
   <script>
     const $$$ = q => document.documentElement.querySelectorAll(q);
-    $$$('.vidoverlay').forEach(e => e.onclick = () => {
-      var video = e.parentNode.getElementsByTagName('video')[0]
-      video.onended = v => {
-        e.style.opacity = null; 
-        v.target.load();
-        e.style.backgroundImage = 'url(images/play.svg)';
-      };
-      console.log(video.paused);
-      console.log(e.style.opacity);
-      if (video.paused && !e.style.opacity){
-      	video.currentTime = 0.0;
-        video.play();
-        e.style.opacity = 0.0;
-      } else if (video.paused) {
-        video.play();
-        e.style.opacity = 0.0;
-      } else {
-        e.style.backgroundImage = 'url(images/pause.svg)';
-        e.style.opacity = 0.8;
-        video.pause();
-      }
+    $$$('video').forEach(vid => {
+      vid.onplay = () => {vid.currentTime = 0; vid.onplay = null;};
     });
   </script>
 </body>
