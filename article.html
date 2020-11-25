@@ -23,7 +23,7 @@
 <p>As a brief recap, the Self-classifying MNIST digits task consisted in placing CAs on a plane forming the shape of an MNIST digit. The cells had to communicate among themselves in order to achieve a total agreement as to which digit they formed.</p>
 <figure>
 <img src='images/local_global_information.jpg' style='width: 650px'>
-<figcaption>Diagram showing the local vs global information available in the system.(a) Locally, every cell can only observe itself and its neighbors. (b) Globally, over time the overall system receives information from all parts of it and is able to distinguish that such shapes compose a specific digit (2 in the example).</figcaption>
+<figcaption>Diagram showing the local vs global information available in the cell collective.(a) Locally, every cell can only observe itself and its neighbors. (b) Globally, the cell collective aggregates information from all parts of itself. It is then able to distinguish that certain shapes compose a specific digit (2 in the example).</figcaption>
 </figure>
 <p>Below we show example classifications of the model trained in the previous article.</p>
 
@@ -266,8 +266,7 @@ Effect of composing two trained perturbations.</figcaption>
 
 <p>This kind of attack was much less effective against Growing CAs. On the one end, this is a positive property to have for engineering systems. On the other hand, this dynamic is also of importance to the scaling of control mechanisms (swarm robotics and nested architectures): a key step in "multicellularity" (joining together to form larger systems from sub-agents <d-cite key="levin2019theComp"></d-cite>) is informational fusion, which makes it difficult to identify the source of signals and memory engrams. An optimal architecture would need to balance the need for validating control messages with a possibility of flexible merging of subunits, which wipes out metadata about the specific source of informational signals. Likewise, the ability to respond successfully to novel environmental challenges is an important goal for autonomous artificial systems, which may import from biology strategies that optimize tradeoff between maintaining a specific set of signals and being flexible enough to establish novel signaling regimes when needed.</p>
 
-<p>The global state perturbation experiment on Growing CAs shows how it is still possible to hijack these CAs towards stable out-of-training configurations and how these kinds of attacks are somewhat composable in a similar way to how embeddings spaces are manipulable in the natural language processing and computer vision fields <d-cite key="mikolov2013efficient,lample2018fader"></d-cite>. However, this experiment failed to discover stable out-of-training configurations <i>after the perturbation was lifted</i>. [Biological comment on how this is not desirable.]</p>
-
+<p>The global state perturbation experiment on Growing CAs shows how it is still possible to hijack these CAs towards stable out-of-training configurations and how these kinds of attacks are somewhat composable in a similar way to how embeddings spaces are manipulable in the natural language processing and computer vision fields <d-cite key="mikolov2013efficient,lample2018fader"></d-cite>. However, this experiment failed to discover stable out-of-training configurations <i>after the perturbation was lifted</i>. We hypothesize that this is partially due to the extreme regeneration capabilities of the pretrained CAs and that different models could be less capable of recovery from arbitrary perturbations.</p>
 </d-article>
 <d-appendix>
     <d-footnote-list></d-footnote-list>
