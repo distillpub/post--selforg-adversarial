@@ -227,6 +227,16 @@
     .vc {
       position: relative;
     }
+
+    d-article {
+      counter-reset: figure;
+    }
+    figure {
+      counter-increment: figure;
+    }
+    figcaption::before {
+      content: "Figure " counter(figure) ": ";
+    }
   </style>
   <d-title>
     <h1>Adversarial Reprogramming of Neural Cellular Automata</h1>
