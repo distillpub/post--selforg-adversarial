@@ -60,5 +60,8 @@ label input:not(:checked) ~ span {
 <input type="checkbox" id="forcesum1" name="forcesum1">
 <label for="forcesum1"> Force sum leq 1</label><br>
 
-<script src="mutating_gca_demo.js">
-</script>
+<script type="module">
+  import { mutatingGCADemo } from "./mutating_gca_demo.js";
+  mutatingGCADemo();
+ </script>
+ 

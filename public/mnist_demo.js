@@ -1,14 +1,4 @@
-"use strict"
-
-function isInViewport(element) {
-  const rect = element.getBoundingClientRect();
-  const frame = window.frameElement;
-  const frameRect = frame ? frame.getBoundingClientRect() : null;
-  const [px, py] = frame ? [frameRect.left, frameRect.top] : [0, 0];
-  const w = window.top.innerWidth;
-  const h = window.top.innerHeight;
-  return rect.top+py < h && rect.left+px < w && rect.bottom+py > 0 && rect.right+px > 0;
-}
+import {isInViewport} from "./util.js"
 
 export function mnistDemo(divId, canvasId) {
     const root = document.getElementById(divId);
@@ -89,38 +79,26 @@ export function mnistDemo(divId, canvasId) {
         const state = tf.variable(tf.zeros([H, W, CH]))
         window.state = state;
         const livingCoords = [];
-        const advLivingCoords = [];
-
+        let advLivingCoords = [];
 
         let imageData = ctx.getImageData(0, 0, W, H);
-        //ctx.drawImage(initImg, 0, 0);
-
-
-        const adv_canvas = new OffscreenCanvas(W, H);
-        const adv_ctx = adv_canvas.getContext('2d');
-        let advImageData = adv_ctx.getImageData(0, 0, W, H);
-
 
         const syncCanvas = ()=>tf.tidy(() => {
             const prevImageData = imageData;
             imageData = ctx.getImageData(0, 0, W, H);
-            const advPrevImageData = advImageData;
-            advImageData = adv_ctx.getImageData(0, 0, W, H);
             const buf = state.dataSync();
             livingCoords.length = 0;
-            advLivingCoords.length = 0;
+            const advCoordsMap = new Map(advLivingCoords.map(p=>[p.toString(), p]));
+            advLivingCoords = Array.from(advCoordsMap.values()); // remove duplicates
             for (let i=0; i<H*W; ++i) {
                 const alphaOfs = i*4+3;
                 const a0 = prevImageData.data[alphaOfs];
                 const a = imageData.data[alphaOfs];
-                const adv_a0 = advPrevImageData.data[alphaOfs];
-                const adv_a = advImageData.data[alphaOfs];
                 if (a>ALIVE_ALPHA*255) {
                     buf[i*CH] = a/255.0;
-                    if (adv_a>ALIVE_ALPHA*255) {
-                        advLivingCoords.push([Math.floor(i/W), i%W]);
-                    } else {
-                        livingCoords.push([Math.floor(i/W), i%W]);
+                    const yx = [Math.floor(i/W), i%W];
+                    if (!advCoordsMap.has(yx.toString())) {
+                        livingCoords.push(yx);
                     }
                 } else if (a!=a0) {
                     buf.fill(0.0, i*CH, i*CH+CH);
@@ -128,6 +106,11 @@ export function mnistDemo(divId, canvasId) {
                 }
             }
             state.assign(tf.tensor(buf, state.shape));
+            advLivingCoords = advLivingCoords.filter(yx=>{
+                const [y, x] = yx;
+                return imageData.data[(y*W+x)*4+3]>ALIVE_ALPHA*255;
+            });
+            console.log(advLivingCoords);
         });
         syncCanvas();
 
@@ -160,13 +143,9 @@ export function mnistDemo(divId, canvasId) {
             return mnistCtx.getImageData(x, y, 28, 28);
         };
 
-        function getDigitTF(digit, sample) {
-            return tf.tensor(new Float32Array(getDigit(digit, sample).data)).reshape([28,28,4]).slice([0,0,2], [28,28,1]).div(255.0);
-        };
-
         function reset() {
             ctx.clearRect(0, 0, W, H);
-            adv_ctx.clearRect(0, 0, W, H);
+            advLivingCoords.length = [];
             const digit = getDigit(currDig, currSample);
             const toDraw = convertDigitToDraw(digit);
             const padding = (D - 28)/2.0;
@@ -190,7 +169,7 @@ export function mnistDemo(divId, canvasId) {
         function switcheroo() {
             // reset the canvas too.
             ctx.clearRect(0, 0, W, H);
-            adv_ctx.clearRect(0, 0, W, H);
+            advLivingCoords.length = 0;
             // get the next digit.
             const digit = getDigit(currDig, currSample);
             const toDraw = convertDigitToDraw(digit);
@@ -256,7 +235,7 @@ export function mnistDemo(divId, canvasId) {
 
             $('#bin').onclick = () => {
                 ctx.clearRect(0, 0, W, H);
-                adv_ctx.clearRect(0, 0, W, H);
+                advLivingCoords.length = 0;
                 syncCanvas();
             };
 
@@ -264,13 +243,6 @@ export function mnistDemo(divId, canvasId) {
               drawRadius = parseFloat(e.target.value)/2.0;
               updateUI();
             };
-
-            $$$('.vidoverlay').forEach(e => e.onclick = () => {
-              e.parentNode.getElementsByTagName('video')[0].onended = v => {e.style.opacity = 0.8; v.target.load();};
-              e.parentNode.getElementsByTagName('video')[0].currentTime = 0.0;
-              e.parentNode.getElementsByTagName('video')[0].play();
-              e.style.opacity = '0';
-            })
 
             $('#hueSlider').oninput = (e) => {
                 let hue = parseFloat(e.target.value);
@@ -350,14 +322,13 @@ export function mnistDemo(divId, canvasId) {
                 const label = tf.gatherND(state, advLivingCoords).slice([0, 10], [-1, -1]).pad([[0, 0], [0, 1]], 0.1).argMax(-1);
                 const colors = colorLookup.gather(label).dataSync();
                 const seconds = new Date().getTime() / 1000 - initT;
-                const t = tf.tensor(seconds).sin().mul(0.5).add(0.5).dataSync();
-                const onemt = 1. - t;
+                const t = Math.sin(seconds*5.0)*0.5+0.5;
                 for (let i=0; i<advLivingCoords.length; ++i) {
                     const [y, x] = advLivingCoords[i];
                     const p = (y*W+x)*4;
-                    imageData.data[p] = colors[i*3] * onemt + (255 * t);
-                    imageData.data[p+1] = colors[i*3+1] * onemt;
-                    imageData.data[p+2] = colors[i*3+2] * onemt;
+                    imageData.data[p] = colors[i*3] * t + 255 * (1.0-t);
+                    imageData.data[p+1] = colors[i*3+1] * t;
+                    imageData.data[p+2] = colors[i*3+2] * t;
                 }
             }
 
@@ -365,16 +336,17 @@ export function mnistDemo(divId, canvasId) {
         step(); // warm up
 
 
-        const isErasing = e=> e.shiftKey;
+        const isErasing = e=> eraser || e.shiftKey;
+        const isAdversarial = ()=>drawadversaryCkbx.checked;
 
 
         ctx.strokeStyle = "#000000";
         ctx.fillStyle = "#000000";
-        adv_ctx.strokeStyle = "#000000";
-        adv_ctx.fillStyle = "#000000";
         const line = (x0, y0, x1, y1, e) => {
+            if (isAdversarial())
+                return;
             let r = drawRadius;
-            if (eraser || isErasing(e)) {
+            if (isErasing(e)) {
                 ctx.globalCompositeOperation = "destination-out";
                 r *= 5.0;
             }
@@ -384,48 +356,16 @@ export function mnistDemo(divId, canvasId) {
             ctx.lineTo(x1, y1);
             ctx.stroke();
             ctx.globalCompositeOperation = "source-over";
-
-            if (drawadversaryCkbx.checked || eraser || isErasing(e)) {
-                if (eraser || isErasing(e)) {
-                    adv_ctx.globalCompositeOperation = "destination-out";
-                }
-                adv_ctx.lineWidth = r*2.0;
-                adv_ctx.beginPath();
-                adv_ctx.moveTo(x0, y0);
-                adv_ctx.lineTo(x1, y1);
-                adv_ctx.stroke();
-                adv_ctx.globalCompositeOperation = "source-over";
-            }
-
-        }
-
-        // make it a point!
-        const pointDraw = (x, y) => {
-            let px = ctx.getImageData(x,y,1,1);
-            px.data[0] = 0;
-            px.data[1] = 0;
-            px.data[2] = 0;
-            px.data[3] = 255;
-            ctx.putImageData(px,x,y);
-
-            ctx.fillRect(x, y, 1, 1);
-            ctx.globalCompositeOperation = "source-over";
-            if (drawadversaryCkbx.checked) {
-                // Perform surgical insertion of 1 pixel only.
-                adv_ctx.putImageData(px,x,y);
-
-                //adv_ctx.fillRect(x, y, 1, 1);
-                adv_ctx.globalCompositeOperation = "source-over";
-            }
         }
 
         const circle = (x, y, e) => {
-            if (drawadversaryCkbx.checked && !(eraser || isErasing(e))) {
-                pointDraw(x, y);
+            if (isAdversarial()) {
+                advLivingCoords.push([Math.floor(y), Math.floor(x)]);
                 return;
             }
+
             let r = drawRadius;
-            if (eraser || isErasing(e)) {
+            if (isErasing(e)) {
                 ctx.globalCompositeOperation = "destination-out";
                 r *= 5.0;
             }
@@ -433,14 +373,6 @@ export function mnistDemo(divId, canvasId) {
             ctx.arc(x, y, r, 0, 2 * Math.PI);
             ctx.fill();
             ctx.globalCompositeOperation = "source-over";
-            if (drawadversaryCkbx.checked && (eraser || isErasing(e))) {
-                // the isErasing call is superfluous, but kept for clarity.
-                adv_ctx.globalCompositeOperation = "destination-out";
-                adv_ctx.beginPath();
-                adv_ctx.arc(x, y, r, 0, 2 * Math.PI);
-                adv_ctx.fill();
-                adv_ctx.globalCompositeOperation = "source-over";
-            }
         }
 
         function canvasToGrid(xin, yin) {
@@ -475,7 +407,6 @@ export function mnistDemo(divId, canvasId) {
             lastPos = [x, y];
         }
 
-        let lastTouchId = 0;
         let lastTouchList = null;
 
         canvas.addEventListener("touchstart", e => {
@@ -505,7 +436,7 @@ export function mnistDemo(divId, canvasId) {
         });
 
         $('#removeadvBtn').onclick = ()=>{
-            adv_ctx.clearRect(0, 0, W, H);
+            advLivingCoords.length = 0;
             syncCanvas();
         }
 
