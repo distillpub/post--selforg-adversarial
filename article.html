@@ -46,7 +46,7 @@ The original model behavior on test data.</figcaption>
 
 <p>Note that this adversarial attack only modifies a very small percentage of the overall system, and the goal is to affect every alive cell. Therefore, these adversaries have to somehow learn to communicate deceiving information that cause wrong classifications and further cascades in the propagation of deceiving information by unaware cells. The unaware cells' parameters cannot be changed so the only means of attack by the adversaries is to cause a change in the cells' states. Cells' states are responsible for communication and diversification.</p>
 
-<p>The task is remarkably simple to optimize, approaching convergence in as little as 2000 training steps. The adversaries are constantly communicating with their neighbors to keep them convinced of the wrong classification. We can see that by visualising what happens when we remove the adversaries after 200 steps. While some digits don't recover, most of them self-correct to the right classification. Here we show a few test examples where we place the adversaries after 200 steps and remove them after 200 more steps.</p>
+<p>The task is remarkably simple to optimize, approaching convergence in as little as 2000 training steps. The adversaries are constantly communicating with their neighbors to keep them convinced of the wrong classification. We can see that by visualising what happens when we remove the adversaries. While some digits don't recover, most of them self-correct to the right classification. Here we show a few test examples where we place the adversaries after 200 steps and remove them after 200 more steps.</p>
 <figure>
     <div class="vc">
     
