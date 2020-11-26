@@ -36,7 +36,7 @@ Your browser does not support the video tag.
     </video>
     </div>
 <figcaption style="">
-The original model behavior on test data.</figcaption>
+The original model behavior on test data. We highlight mistakes in classification with a red background.</figcaption>
 </figure>
 
 <p>In this experiment, <strong>the goal is to create an adversarial CA that can hijack the global cells' classifications to always be an 8</strong>. We take the CA model trained on the previous article and freeze its parameters. We then train a new set of CAs whose model is identical to the specs of the frozen model but is randomly initialized. The training regime is mostly identical to the one used for training the self-classifying MNIST digits CAs. There are three important differences:</p>
@@ -56,7 +56,7 @@ Your browser does not support the video tag.
     </video>
     </div>
 <figcaption style="">
-We place the adversaries (red pixels) after 200 steps and remove them after 200 more steps. Most digits recover, but not all.</figcaption>
+We place the adversaries (red pixels) after 200 steps and remove them after 200 more steps. Most digits recover, but not all.We highlight mistakes in classification with a red background.</figcaption>
 </figure>
 <p>While we trained the adversaries with a 10% distribution, we can observe that very often we need significantly fewer adversaries to steer the entire classification towards an 8. Here is a test run with 1% of cells being adversaries.</p>
 <figure>
@@ -68,7 +68,7 @@ Your browser does not support the video tag.
     </video>
     </div>
 <figcaption style="">
-Adversaries on 1% of the cells (black pixels).</figcaption>
+Adversaries on 1% of the cells (red pixels).We highlight mistakes in classification with a red background.</figcaption>
 </figure>
 <p>We created a demo playground where the reader can draw digits and place adversaries with surgical precision. We encourage the reader to play with the demo to get a sense on how easily innocent cells can get swayed towards the wrong outcomes.</p>
 <iframe id="mnistDemoIframe" src="demo.html" scrolling="no" frameborder="0"
