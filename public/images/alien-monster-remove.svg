@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg id="svg74" version="1.1" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" viewBox="0 0 128 128" preserveAspectRatio="xMidYMid meet" height="128" width="128" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs id="defs78">
+    <filter id="grayscale-filter-0" x="-500%" y="-500%" width="1000%" height="1000%" bx:preset="grayscale 1 1">
+      <feColorMatrix type="matrix" values="0.213 0.715 0.072 0 0 0.213 0.715 0.072 0 0 0.213 0.715 0.072 0 0 0 0 0 1 0"/>
+    </filter>
+  </defs>
+  <linearGradient gradientTransform="translate(0 -713.89)" y2="830.09" x2="40.8" y1="830.09" x1="29.2" gradientUnits="userSpaceOnUse" id="IconifyId-176052c72f9-2589ff-2098">
+    <stop id="stop19" stop-color="#40c0e7" offset="0"/>
+    <stop id="stop21" stop-color="#40c0e7" offset="1"/>
+  </linearGradient>
+  <path id="path24" d="M29.2 110.4h11.6V122H29.2z" fill="url(#IconifyId-176052c72f9-2589ff-2098)" style="filter: url(#grayscale-filter-0);"/>
+  <linearGradient gradientTransform="translate(0 -713.89)" y2="725.69" x2="40.8" y1="725.69" x1="29.2" gradientUnits="userSpaceOnUse" id="IconifyId-176052c72f9-2589ff-2099">
+    <stop id="stop26" stop-color="#f0f" offset="0"/>
+    <stop id="stop28" stop-color="#f0f" offset="1"/>
+  </linearGradient>
+  <path id="path31" d="M29.2 6h11.6v11.6H29.2z" fill="url(#IconifyId-176052c72f9-2589ff-2099)" style="filter: url(#grayscale-filter-0);"/>
+  <linearGradient gradientTransform="translate(0 -713.89)" y2="830.09" x2="98.8" y1="830.09" x1="87.2" gradientUnits="userSpaceOnUse" id="IconifyId-176052c72f9-2589ff-2100">
+    <stop id="stop33" stop-color="#40c0e7" offset="0"/>
+    <stop id="stop35" stop-color="#40c0e7" offset="1"/>
+  </linearGradient>
+  <path id="path38" d="M87.2 110.4h11.6V122H87.2z" fill="url(#IconifyId-176052c72f9-2589ff-2100)" style="filter: url(#grayscale-filter-0);"/>
+  <linearGradient gradientTransform="translate(0 -713.89)" y2="731.49" x2="64" y1="824.29" x1="64" gradientUnits="userSpaceOnUse" id="IconifyId-176052c72f9-2589ff-2101">
+    <stop id="stop40" stop-color="#792d85" offset="0.072"/>
+    <stop id="stop42" stop-color="#ac1cb3" offset="0.305"/>
+    <stop id="stop44" stop-color="#d90ddc" offset="0.542"/>
+    <stop id="stop46" stop-color="#f503f6" offset="0.725"/>
+    <stop id="stop48" stop-color="#f0f" offset="0.831"/>
+  </linearGradient>
+  <path id="path51" fill="url(#IconifyId-176052c72f9-2589ff-2101)" d="M110.4 52.4V40.8H98.8V29.2H87.2V17.6H75.6v11.6H52.4V17.6H40.8v11.6H29.2v11.6H17.6v11.6H6v46.4h11.6V64h11.6v34.8h11.6v11.6h11.6V91.1H40.8V79.5h46.4v11.6H75.6v19.3h11.6V98.8h11.6V64h11.6v34.8H122V52.4h-11.6zM40.8 40.8h11.6v11.6H40.8V40.8zm46.4 11.6H75.6V40.8h11.6v11.6z" style="filter: url(#grayscale-filter-0);"/>
+  <linearGradient gradientTransform="translate(0 -713.89)" y2="725.69" x2="98.8" y1="725.69" x1="87.2" gradientUnits="userSpaceOnUse" id="IconifyId-176052c72f9-2589ff-2102">
+    <stop id="stop53" stop-color="#f0f" offset="0"/>
+    <stop id="stop55" stop-color="#f0f" offset="1"/>
+  </linearGradient>
+  <path id="path58" d="M87.2 6h11.6v11.6H87.2z" fill="url(#IconifyId-176052c72f9-2589ff-2102)" style="filter: url(#grayscale-filter-0);"/>
+  <g id="g70" stroke-miterlimit="10" stroke-width="4" stroke="#6f21a1" style="filter: url(#grayscale-filter-0);">
+    <path id="path60" d="M29.2 110.4h11.6V122H29.2z" fill="#792d85"/>
+    <path id="path62" d="M29.2 6h11.6v11.6H29.2z" fill="none"/>
+    <path id="path64" d="M87.2 110.4h11.6V122H87.2z" fill="#792d85"/>
+    <path id="path66" fill="none" d="M110.4 52.4V40.8H98.8V29.2H87.2V17.6H75.6v11.6H52.4V17.6H40.8v11.6H29.2v11.6H17.6v11.6H6v46.4h11.6V64h11.6v34.8h11.6v11.6h11.6V91.1H40.8V79.5h46.4v11.6H75.6v19.3h11.6V98.8h11.6V64h11.6v34.8H122V52.4h-11.6zM40.8 40.8h11.6v11.6H40.8V40.8zm46.4 11.6H75.6V40.8h11.6v11.6z"/>
+    <path id="path68" d="M87.2 6h11.6v11.6H87.2z" fill="none"/>
+  </g>
+  <circle style="fill: none; stroke: rgb(221, 33, 33); stroke-width: 15px;" cx="64.19" cy="62.927" r="52.667"/>
+  <line style="stroke: rgb(221, 33, 33); stroke-width: 16px;" x1="25.90442420328868" y1="96.12326287834692" x2="105.23464784633293" y2="34.08751546129223"/>
+</svg>

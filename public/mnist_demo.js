@@ -12,8 +12,8 @@ export function mnistDemo(divId, canvasId) {
     let currSample = 0;
     let uiDigitSamples = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-    let eraser = false;
     let paused = false;
+    let tool = 'pencil';
 
     let drawRadius = 1.0;
 
@@ -54,9 +54,6 @@ export function mnistDemo(divId, canvasId) {
 
         return [w0, b0, w1, b1, w2, b2];
     }
-
-    let drawadversaryCkbx = document.getElementById("drawadversary");
-
 
     async function main() {
 
@@ -223,15 +220,12 @@ export function mnistDemo(divId, canvasId) {
               paused = !paused;
               updateUI();
             };
-            $('#eraser').onclick = () => {
-              eraser = true;
-              updateUI();
-            };
-
-            $('#pencil').onclick = () => {
-              eraser = false;
-              updateUI();
-            };
+            $$('.radiotool div').forEach(e=>{ 
+                e.onclick = ()=>{
+                    tool = e.id;
+                    updateUI();
+                };
+            });
 
             $('#bin').onclick = () => {
                 ctx.clearRect(0, 0, W, H);
@@ -258,11 +252,9 @@ export function mnistDemo(divId, canvasId) {
         function updateUI() {
             $('#play').style.display = paused ? "inline" : "none";
             $('#pause').style.display = !paused ? "inline" : "none";
-            $('#eraser').style.filter = !eraser ? "grayscale() opacity(0.7)" : "";
-            $('#pencil').style.filter = eraser ? "grayscale() opacity(0.7)" : "";
             const speed = parseInt($('#speed').value);
             $('#speedLabel').innerHTML = ['1/60 x', '1/10 x', '1/2 x', '1 x', '2 x', '4 x', '<b>max</b>'][speed + 3];
-            $('#radius').innerText = ( (eraser) ? drawRadius * 5.0 : drawRadius);
+            $('#radius').innerText = ( (tool=='eraser') ? drawRadius * 5.0 : drawRadius);
         };
 
 
@@ -336,8 +328,8 @@ export function mnistDemo(divId, canvasId) {
         step(); // warm up
 
 
-        const isErasing = e=> eraser || e.shiftKey;
-        const isAdversarial = ()=>drawadversaryCkbx.checked;
+        const isErasing = e=> tool=='eraser' || e.shiftKey;
+        const isAdversarial = ()=>tool=='adversary';
 
 
         ctx.strokeStyle = "#000000";
@@ -435,7 +427,7 @@ export function mnistDemo(divId, canvasId) {
             lastTouchList = e.touches; 
         });
 
-        $('#removeadvBtn').onclick = ()=>{
+        $('#adversary-remove').onclick = ()=>{
             advLivingCoords.length = 0;
             syncCanvas();
         }
@@ -446,7 +438,7 @@ export function mnistDemo(divId, canvasId) {
                 step();
                 const dt = Math.max(Date.now()-t0, 1);
                 const fps = Math.round(1000.0 / dt);
-                $('#log').innerText = `${fps} fps`
+                $('#ips').innerText = `${fps}`
                 ctx.putImageData(imageData, 0, 0)
             }
             requestAnimationFrame(render);
