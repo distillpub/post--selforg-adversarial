@@ -48,14 +48,14 @@
     line-height: 1em;
     display: grid;
     grid-template-columns: auto auto;
-    grid-template-rows: auto 60px 80px 75px 1fr;
+    grid-template-rows: auto;
     row-gap: 20px;
     overflow: hidden;
 }
 
 @media (min-width: 710px){
   #demo-controls {
-    grid-template-rows: auto 60px 80px 100px 1fr;
+    grid-template-rows: auto;
   }
 }
 
@@ -244,32 +244,32 @@ input[type="radio"] {
     </div>
 
     <div>
-        tailPerturbation: <span id='tailPerturbation'>0.0</span> <br>
+        Tail perturbation: <span id='tailPerturbation'>0.0</span> <br>
         <input type="range" min="-1.0" max="1.0" value="0.0" class="slider" 
           step="0.05" id="tailSlider">
     </div>
     <div>
-        legPerturbation: <span id='legPerturbation'>0.0</span> <br>
+        Leg perturbation: <span id='legPerturbation'>0.0</span> <br>
         <input type="range" min="-1.0" max="1.0" value="0.0" class="slider" 
           step="0.05" id="legSlider">
     </div>
     <div>
-        headPerturbation: <span id='headPerturbation'>0.0</span> <br>
+        Head perturbation: <span id='headPerturbation'>0.0</span> <br>
         <input type="range" min="-1.0" max="1.0" value="0.0" class="slider" 
           step="0.05" id="headSlider">
     </div>
     <div>
-        armPerturbation: <span id='armPerturbation'>0.0</span> <br>
+        Arm perturbation: <span id='armPerturbation'>0.0</span> <br>
         <input type="range" min="-1.0" max="1.0" value="0.0" class="slider" 
           step="0.05" id="armSlider">
     </div>
     <div>
-        redPerturbation: <span id='redPerturbation'>0.0</span> <br>
+        Red perturbation: <span id='redPerturbation'>0.0</span> <br>
         <input type="range" min="-1.0" max="1.0" value="0.0" class="slider" 
           step="0.05" id="redSlider">
     </div>
     <div style="white-space: nowrap;">
-        bluePerturbation: <span id='bluePerturbation'>0.0</span> <br>
+        Blue perturbation: <span id='bluePerturbation'>0.0</span> <br>
         <input type="range" min="-1.0" max="1.0" value="0.0" class="slider" 
           step="0.05" id="blueSlider">        
     </div>
