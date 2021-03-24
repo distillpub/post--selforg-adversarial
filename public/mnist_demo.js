@@ -432,14 +432,39 @@ export function mnistDemo(divId, canvasId) {
             syncCanvas();
         }
 
-        function render() {
+        let lastDrawTime = 0;
+        let lastFPSTime = 0;
+        let stepsPerFrame = 1;
+        let stepsSinceLastFPS = 0;
+        let frameCount = 0;
+
+        function render(time) {
             if (!paused && isInViewport(canvas)) {
-                const t0 = Date.now();
-                step();
-                const dt = Math.max(Date.now()-t0, 1);
-                const fps = Math.round(1000.0 / dt);
-                $('#ips').innerText = `${fps}`
+                const speed = parseInt($("#speed").value);
+                if (speed <= 0) {  // slow down by skipping steps
+                    const skip = [1, 2, 10, 60][-speed];
+                    stepsPerFrame = (frameCount % skip) ? 0 : 1;
+                    frameCount += 1;
+                } else if (speed > 0) { // speed up by making more steps per frame
+                    const interval = time - lastDrawTime;
+                    stepsPerFrame += interval < 20.0 ? 1 : -1;
+                    stepsPerFrame = Math.max(1, stepsPerFrame);
+                    stepsPerFrame = Math.min(stepsPerFrame, [1, 2, 4, Infinity][speed])
+                }
+                for (let i = 0; i < stepsPerFrame; ++i) {
+                    // This is where the logic actually is.
+                    step();
+                }
+
+                if (time - lastFPSTime > 1000) {
+                    $("#ips").innerText = Math.round(stepsSinceLastFPS/((time - lastFPSTime)/1000.0));
+                    stepsSinceLastFPS = 0;
+                    lastFPSTime = time;
+                }
+                stepsSinceLastFPS += stepsPerFrame;
+                // This is where we draw.
                 ctx.putImageData(imageData, 0, 0)
+                lastDrawTime = time;
             }
             requestAnimationFrame(render);
         }
