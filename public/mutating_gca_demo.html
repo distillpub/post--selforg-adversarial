@@ -27,10 +27,10 @@
   color: inherit;
 }
 
-@media (min-width: 710px) {
+@media (min-width: 700px) {
   #demo {
     grid-template-columns: 0fr 300px;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto auto auto;
   }
   #demo-controls {
     grid-row: 1 / 3;
@@ -47,16 +47,8 @@
 #demo-controls {
     line-height: 1em;
     display: grid;
-    grid-template-columns: auto auto;
-    grid-template-rows: auto;
     row-gap: 20px;
     overflow: hidden;
-}
-
-@media (min-width: 710px){
-  #demo-controls {
-    grid-template-rows: auto;
-  }
 }
 
 .icon {
@@ -98,9 +90,11 @@
 
 input[type=range] {
   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
-  width: 95%; /* Specific width is required for Firefox. */
+  width: 100%; /* Specific width is required for Firefox. */
   background: transparent; /* Otherwise white in Chrome */
   margin-bottom: 8px;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .hint a {
@@ -126,9 +120,9 @@ input[type=range]::-ms-track {
   cursor: pointer;
 
   /* Hides the slider so custom styles can be added */
-  background: transparent;
+ /* background: transparent;
   border-color: transparent;
-  color: transparent;
+  color: transparent;*/
 }
 
 /* Thumb */
@@ -136,19 +130,17 @@ input[type=range]::-ms-track {
 /* Special styling for WebKit/Blink */
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
+  height: 15px;
+  width: 15px;
   background: steelblue;
   cursor: pointer;
-  margin-top: -6px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  margin-top: -0px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
 }
 
 /* All the same stuff for Firefox */
 input[type=range]::-moz-range-thumb {
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
+  height: 15px;
+  width: 15px;
   background: steelblue;
   cursor: pointer;
   border: none;
@@ -156,10 +148,9 @@ input[type=range]::-moz-range-thumb {
 
 /* All the same stuff for IE */
 input[type=range]::-ms-thumb {
-  height: 14px;
-  width: 14px;
-  border-radius: 50%;
-  background: grey;
+  height: 15px;
+  width: 15px;
+  background: stellblue;
   cursor: pointer;
 }
 
@@ -167,10 +158,9 @@ input[type=range]::-ms-thumb {
 
 input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
-  height: 3px;
+  height: 15px;
   cursor: pointer;
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
   border: none;
 }
 
@@ -180,19 +170,17 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 
 input[type=range]::-moz-range-track {
   width: 100%;
-  height: 3px;
+  height: 15px;
   cursor: pointer;
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
   border: none;
 }
 
 input[type=range]::-ms-track {
   width: 100%;
-  height: 3px;
+  height: 15px;
   cursor: pointer;
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
   border: none;
 }
 input[type=range]::-ms-fill-lower {
@@ -229,6 +217,42 @@ input[type="radio"] {
   height: 16px;
 }
 
+#controls {
+  text-align: center;
+  padding-top: 15px;
+}
+
+#leq{
+  float: right;
+  text-align: center;
+  padding-right: 40px;
+  padding-top: 2px;
+}
+
+#leq * {
+  cursor: pointer !important;
+}
+
+#controls span {
+  position: absolute;
+  right: 0px;
+  font-size: 80%;
+}
+
+.slidetitle{
+  display: flex;
+  justify-content: center;
+  position: relative;
+  border-bottom: #adadad solid 1px;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+
+#resetbutton {
+  float: left;
+  padding-left: 40px;
+}
+
 </style>
 
 
@@ -237,43 +261,42 @@ input[type="radio"] {
 
   <div id="demo-controls">
 
-    <div><svg class="icon" id="reset"><use xlink:href="#resetIcon"></use></svg></div>
-    <div>
-      <input type="checkbox" id="forcesum1" name="forcesum1">
-      <label for="forcesum1"> Force sum ≤ 1</label><br>
-    </div>
-
-    <div>
-        Tail perturbation: <span id='tailPerturbation'>0.0</span> <br>
+    <div id="controls">
         <input type="range" min="-1.0" max="1.0" value="0.0" class="slider" 
           step="0.05" id="tailSlider">
-    </div>
-    <div>
-        Leg perturbation: <span id='legPerturbation'>0.0</span> <br>
+        <div class="slidetitle">Tail
+        <span id='tailPerturbation'>0.0</span></div>
         <input type="range" min="-1.0" max="1.0" value="0.0" class="slider" 
           step="0.05" id="legSlider">
-    </div>
-    <div>
-        Head perturbation: <span id='headPerturbation'>0.0</span> <br>
+        <div class="slidetitle">Leg
+        <span id='legPerturbation'>0.0</span></div>
         <input type="range" min="-1.0" max="1.0" value="0.0" class="slider" 
           step="0.05" id="headSlider">
-    </div>
-    <div>
-        Arm perturbation: <span id='armPerturbation'>0.0</span> <br>
+        <div class="slidetitle">Head
+        <span id='headPerturbation'>0.0</span></div>
         <input type="range" min="-1.0" max="1.0" value="0.0" class="slider" 
           step="0.05" id="armSlider">
-    </div>
-    <div>
-        Red perturbation: <span id='redPerturbation'>0.0</span> <br>
+        <div class="slidetitle">Arm
+        <span id='armPerturbation'>0.0</span></div>
         <input type="range" min="-1.0" max="1.0" value="0.0" class="slider" 
           step="0.05" id="redSlider">
-    </div>
-    <div style="white-space: nowrap;">
-        Blue perturbation: <span id='bluePerturbation'>0.0</span> <br>
+        <div class="slidetitle">Red
+        <span id='redPerturbation'>0.0</span></div>
         <input type="range" min="-1.0" max="1.0" value="0.0" class="slider" 
           step="0.05" id="blueSlider">        
+        <div class="slidetitle">Blue
+        <span id='bluePerturbation'>0.0</span></div>
+    </div>
+    <div>
+      <div id="leq">
+        <label for="forcesum1">
+  <svg xmlns="http://www.w3.org/2000/svg" width="90.416px" height="25.336px" viewBox="0 -950 4995.5 1400" xmlns:xlink="http://www.w3.org/1999/xlink" style=""><defs><path id="MJX-13-TEX-LO-2211" d="M60 948Q63 950 665 950H1267L1325 815Q1384 677 1388 669H1348L1341 683Q1320 724 1285 761Q1235 809 1174 838T1033 881T882 898T699 902H574H543H251L259 891Q722 258 724 252Q725 250 724 246Q721 243 460 -56L196 -356Q196 -357 407 -357Q459 -357 548 -357T676 -358Q812 -358 896 -353T1063 -332T1204 -283T1307 -196Q1328 -170 1348 -124H1388Q1388 -125 1381 -145T1356 -210T1325 -294L1267 -449L666 -450Q64 -450 61 -448Q55 -446 55 -439Q55 -437 57 -433L590 177Q590 178 557 222T452 366T322 544L56 909L55 924Q55 945 60 948Z"></path><path id="MJX-13-TEX-N-7C" d="M139 -249H137Q125 -249 119 -235V251L120 737Q130 750 139 750Q152 750 159 735V-235Q151 -249 141 -249H139Z"></path><path id="MJX-13-TEX-I-6B" d="M121 647Q121 657 125 670T137 683Q138 683 209 688T282 694Q294 694 294 686Q294 679 244 477Q194 279 194 272Q213 282 223 291Q247 309 292 354T362 415Q402 442 438 442Q468 442 485 423T503 369Q503 344 496 327T477 302T456 291T438 288Q418 288 406 299T394 328Q394 353 410 369T442 390L458 393Q446 405 434 405H430Q398 402 367 380T294 316T228 255Q230 254 243 252T267 246T293 238T320 224T342 206T359 180T365 147Q365 130 360 106T354 66Q354 26 381 26Q429 26 459 145Q461 153 479 153H483Q499 153 499 144Q499 139 496 130Q455 -11 378 -11Q333 -11 305 15T277 90Q277 108 280 121T283 145Q283 167 269 183T234 206T200 217T182 220H180Q168 178 159 139T145 81T136 44T129 20T122 7T111 -2Q98 -11 83 -11Q66 -11 57 -1T48 16Q48 26 85 176T158 471L195 616Q196 629 188 632T149 637H144Q134 637 131 637T124 640T121 647Z"></path><path id="MJX-13-TEX-I-6E" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"></path><path id="MJX-13-TEX-N-2264" d="M674 636Q682 636 688 630T694 615T687 601Q686 600 417 472L151 346L399 228Q687 92 691 87Q694 81 694 76Q694 58 676 56H670L382 192Q92 329 90 331Q83 336 83 348Q84 359 96 365Q104 369 382 500T665 634Q669 636 674 636ZM84 -118Q84 -108 99 -98H678Q694 -104 694 -118Q694 -130 679 -138H98Q84 -131 84 -118Z"></path><path id="MJX-13-TEX-N-31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"></path></defs><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><g data-mml-node="math"><g data-mml-node="mo"><use xlink:href="#MJX-13-TEX-LO-2211"></use></g><g data-mml-node="TeXAtom" transform="translate(1610.7, 0)"><g data-mml-node="mo"><use xlink:href="#MJX-13-TEX-N-7C"></use></g><g data-mml-node="msub" transform="translate(278, 0)"><g data-mml-node="mi"><use xlink:href="#MJX-13-TEX-I-6B"></use></g><g data-mml-node="mi" transform="translate(521, -150) scale(0.707)"><use xlink:href="#MJX-13-TEX-I-6E"></use></g></g><g data-mml-node="mo" transform="translate(1273.3, 0)"><use xlink:href="#MJX-13-TEX-N-7C"></use></g></g><g data-mml-node="mo" transform="translate(3439.7, 0)"><use xlink:href="#MJX-13-TEX-N-2264"></use></g><g data-mml-node="mn" transform="translate(4495.5, 0)"><use xlink:href="#MJX-13-TEX-N-31"></use></g></g></g></svg></label><br>
+      <input type="checkbox" id="forcesum1" name="forcesum1">
+    </div>
+    <div id="resetbutton"><svg class="icon" id="reset"><use xlink:href="#resetIcon"></use></svg></div>
     </div>
   </div>
+
 
 </div>
 

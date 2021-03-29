@@ -99,22 +99,22 @@ export function mutatingGCADemo() {
     const updateKUnchecked = (kid, v) => {
       if (kid == "tail"){
         kTail = v;
-        $('#tailPerturbation').innerText = kTail;
+        $('#tailPerturbation').innerText = kTail.toFixed(2);
       } else if (kid == "leg"){
         kLeg = v;
-        $('#legPerturbation').innerText = kLeg;
+        $('#legPerturbation').innerText = kLeg.toFixed(2);
       } else if (kid == "head"){
         kHead = v;
-        $('#headPerturbation').innerText = kHead;
+        $('#headPerturbation').innerText = kHead.toFixed(2);
       } else if (kid == "arm"){
         kArm = v;
-        $('#armPerturbation').innerText = kArm;
+        $('#armPerturbation').innerText = kArm.toFixed(2);
       } else if (kid == "red"){
         kRed = v;
-        $('#redPerturbation').innerText = kRed;
+        $('#redPerturbation').innerText = kRed.toFixed(2);
       } else if (kid == "blue"){
         kBlue = v;
-        $('#bluePerturbation').innerText = kBlue;
+        $('#bluePerturbation').innerText = kBlue.toFixed(2);
       } else {
         console.log("ERROR!");
       }
@@ -200,17 +200,17 @@ export function mutatingGCADemo() {
             kArm = kid == "arm" ? vAbs * vSign : kArmSign * (kArmAbs - armDecr);
             kRed = kid == "red" ? vAbs * vSign : kRedSign * (kRedAbs - redDecr);
             kBlue = kid == "blue" ? vAbs * vSign : kBlueSign * (kBlueAbs - blueDecr);
-            $('#tailPerturbation').innerText = kTail;
+            $('#tailPerturbation').innerText = kTail.toFixed(2);
             tailSlider.value = kTail;
-            $('#legPerturbation').innerText = kLeg;
+            $('#legPerturbation').innerText = kLeg.toFixed(2);
             legSlider.value = kLeg;
-            $('#headPerturbation').innerText = kHead;
+            $('#headPerturbation').innerText = kHead.toFixed(2);
             headSlider.value = kHead;
-            $('#armPerturbation').innerText = kArm;
+            $('#armPerturbation').innerText = kArm.toFixed(2);
             armSlider.value = kArm;
-            $('#redPerturbation').innerText = kRed;
+            $('#redPerturbation').innerText = kRed.toFixed(2);
             redSlider.value = kRed;
-            $('#bluePerturbation').innerText = kBlue;
+            $('#bluePerturbation').innerText = kBlue.toFixed(2);
             blueSlider.value = kBlue;
           }
         }
