@@ -75,7 +75,7 @@ Adversaries on 1% of the cells (red pixels).We highlight mistakes in classificat
 </figure>
 <p>We created a demo playground where the reader can draw digits and place adversaries with surgical precision. We encourage the reader to play with the demo to get a sense on how easily innocent cells can get swayed towards the wrong outcomes.</p>
 <iframe id="mnistDemoIframe" src="demo.html" scrolling="no" frameborder="0"
-    style="position: relative; height: 100px; width: 100px;" onload="resizeIframe();"
+    style="position: relative; height: 100px; width: 100px;" onload="resizeIframe(this);"
 ></iframe>
 <h2 id='adversarial-injections-for-growing-cas'>Adversarial Injections for Growing CAs</h2>
 <a href="https://colab.research.google.com/drive/1N2V8auh_Hsl6kL4FOK18_OS4BakU1n4t#scrollTo=ByHbsY0EuyqB" class="colab-root">Try in a <span class="colab-span">Notebook</span></a>
@@ -235,7 +235,7 @@ Effect of composing two trained perturbations.</figcaption>
 <p>The arguments we used can be generalized to any arbitrary number of perturbations. We created a small playground that allows the reader to input their desired combinations. Empirically, we were surprised by how many of these combinations result in good perturbations and it appears true that keeping k bound to 1 results in generally more stable patterns. We also observed how going the opposite direction from a perturbation is usually much more unstable.</p>
 <p>Below there is a playground to experiment with these compositional perturbations.</p>
 <iframe id="mutatingDemo" src="mutating_gca_demo.html" scrolling="no" frameborder="0"
-    style="position: relative; height: 800px; width: 100%;" onload="resizeIframe();"
+    style="position: relative; height: 800px; width: 100%;" onload="resizeIframe(this);"
 ></iframe>
 <h2 id='related-work'>Related work</h2>
 <p>This work is inspired by Generative Adversarial Networks (GANs) <d-cite key="goodfellow2014generative"></d-cite>. While with GANs it is typical to cotrain pairs of models, in this work we froze the original CAs and trained the adversaries only. This is to the greatest degree inspired by the seminal work <i>Adversarial Reprogramming of Neural Networks </i><d-cite key="elsayed2018adversarial"></d-cite>.</p>
