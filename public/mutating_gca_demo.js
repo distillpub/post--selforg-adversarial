@@ -272,12 +272,25 @@ export function mutatingGCADemo() {
     const ctx = canvas.getContext('2d');
     canvas.width = w;
     canvas.height = h;
-    canvas.style.width = `${w*scale}px`;
-    canvas.style.height = `${h*scale}px`;
+    // canvas.style.width = `${w*scale}px`;
+    // canvas.style.height = `${h*scale}px`;
     
+    function canvasToGrid(xin, yin) {
+          const x = xin / canvas.clientWidth * w;
+          const y = yin / canvas.clientHeight * h;
+          return [x, y];    
+      }
+    const getClickPos = e=>{
+      return canvasToGrid(e.offsetX, e.offsetY);
+    }
+    function getTouchPos(touch) {
+      const rect = canvas.getBoundingClientRect();
+      return canvasToGrid(touch.clientX - rect.left, touch.clientY - rect.top);
+    }
+
+
     canvas.onmousedown = e=>{
-      const x = Math.floor(e.clientX/scale);
-        const y = Math.floor(e.clientY/scale);
+      const [x, y] = getClickPos(e);
         if (e.buttons == 1) {
           if (e.shiftKey) {
             plantSeed(x, y);  
@@ -287,12 +300,29 @@ export function mutatingGCADemo() {
         }
     }
     canvas.onmousemove = e=>{
-      const x = Math.floor(e.clientX/scale);
-      const y = Math.floor(e.clientY/scale);
+      const [x, y] = getClickPos(e);
       if (e.buttons == 1 && !e.shiftKey) {
         damage(x, y, 8);
       }
     }
+
+    let lastTouchList = null;
+
+    canvas.addEventListener("touchstart", e => {
+        e.preventDefault();
+        for (const t of e.changedTouches) {
+            const [x, y] = getTouchPos(t);
+            damage(x,y, 8);
+        }
+    });
+
+    canvas.addEventListener("touchmove", e => {
+        e.preventDefault();
+        for (const t of e.changedTouches) {
+            const [x, y] = getTouchPos(t);
+            damage(x, y, 8);
+        }
+    });
 
     function step() {
       tf.tidy(()=>{

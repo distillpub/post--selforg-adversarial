@@ -361,6 +361,10 @@
       text-align: center;
   }
 
+  iframe {
+    grid-column: page;
+  }
+
   </style>
   <d-title>
     <h1>Adversarial Reprogramming of Neural Cellular Automata</h1>
@@ -380,5 +384,19 @@
     $$$('video').forEach(vid => {
       vid.onplay = () => {vid.currentTime = 0; vid.onplay = null;};
     });
+  </script>
+  <script>
+    function resizeIframe(elem) {
+      elem.style.height = elem.contentWindow.document.body.scrollHeight + 'px';
+    }
+    document.querySelectorAll("iframe").forEach(
+      (i) => i.addEventListener("load", 
+        () => setTimeout( () => {
+            window.addEventListener("resize", () => resizeIframe(i)); 
+            resizeIframe(i); 
+          }
+        , 1500) //make sure all dynamic resources are loaded in iframe...
+      )
+    );
   </script>
 </body>

@@ -60,8 +60,8 @@ export function mnistDemo(divId, canvasId) {
         const canvas = document.getElementById(canvasId);
         canvas.width = W;
         canvas.height = H;
-        canvas.style.width = W*10+'px';
-        canvas.style.height = H*10+'px';
+        // canvas.style.width = W*10+'px';
+        // canvas.style.height = H*10+'px';
         const ctx = canvas.getContext('2d');
 
 
@@ -107,7 +107,6 @@ export function mnistDemo(divId, canvasId) {
                 const [y, x] = yx;
                 return imageData.data[(y*W+x)*4+3]>ALIVE_ALPHA*255;
             });
-            console.log(advLivingCoords);
         });
         syncCanvas();
 
@@ -152,7 +151,6 @@ export function mnistDemo(divId, canvasId) {
 
         function convertDigitToDraw(digit) {
             let toDraw = new ImageData(28, 28);
-            console.log(toDraw.data[0], toDraw.data[1], toDraw.data[2], toDraw.data[3])
             for (let i = 0; i < 28 * 28; i++) {
                 // we expect RGBA, so 4 values to process.
                 const p = i*4;
@@ -210,11 +208,9 @@ export function mnistDemo(divId, canvasId) {
                 dctx.globalCompositeOperation = "screen";
                 dctx.fillStyle = rgb(colors[i]);
                 dctx.fillRect(0, 0, 28, 28);
-                console.log("clicked" + i);
               }
               $('#pattern-selector').appendChild(dcv);
             }
-            console.log("loaded");
             $('#reset').onclick = reset;
             $('#play-pause').onclick = () => {
               paused = !paused;
@@ -241,10 +237,8 @@ export function mnistDemo(divId, canvasId) {
             $('#hueSlider').oninput = (e) => {
                 let hue = parseFloat(e.target.value);
                 $('#hueValue').innerText = hue;
-                console.log($$$('.color_heavy, filter'));
                 $$$('.color_heavy, figure').forEach(e => {e.style.filter = "hue-rotate(" + hue + "deg)"});
             };
-            console.log("loaded");
             $('#speed').onchange = updateUI;
             $('#speed').oninput = updateUI;
             updateUI();
@@ -283,7 +277,7 @@ export function mnistDemo(divId, canvasId) {
 
         // add blinking capability.
         const initT = new Date().getTime() / 1000;
-        const step = ()=>tf.tidy(() => {
+        const step = () => tf.tidy(() => {
             const old_state = state;
             if (livingCoords.length > 0) {
                 tf.util.shuffle(livingCoords);

@@ -1,81 +1,50 @@
-*, *:before, *:after {
-    box-sizing: border-box;
-}
-
 #demo {
+    display: inline-grid;
     font-size: 14px;
     user-select: none;
     grid-template-columns: auto;
     grid-template-rows: auto auto auto;
     grid-auto-flow: column;
     row-gap: 10px;
-    display: inline-grid;
 }
 
 .hint a {
   color: inherit;
 }
 
-@media (min-width: 1000px) {
-  #demo {
-    grid-template-columns: 0fr 300px;
-    grid-template-rows: auto auto;
-  }
-  #demo-controls {
-    grid-row: 1/3;
-  }
-}
-
-#demo-canvas {
+#canvas {
     border: 1px solid lightgrey;
     image-rendering: pixelated;
     touch-action: none;
-    width: 560px;
-    margin: auto;
+    width: calc(100% - 2px);
 }
 
-@media (max-width: 600px) {
-  #demo-canvas {
-    width: 80%;
+@media (min-width: 700px) {
+  #demo {
+    grid-template-columns: 0fr 300px;
+    grid-template-rows: auto auto auto;
+  }
+  #demo-controls {
+    grid-row: 1 / 3;
   }
 }
 
-@media (max-width: 1000px) {
-  #demo-tip, #demo-controls {
-    width: 80%;
-    margin: auto;
+/*shrink demo on phones*/
+@media (min-width: 468px) {
+  #canvas {
+    width: 384px;
   }
 }
 
 #demo-controls {
     line-height: 1em;
     display: grid;
-    grid-template-columns: 120px auto;
-    /* grid-template-rows: auto 60px 60px 60px 40px 1fr 1fr; */
-    grid-auto-rows: min-content;
-    row-gap: 10px;
+    row-gap: 20px;
     overflow: hidden;
 }
 
-#pattern-selector {
-    grid-column: 1/3;
-    display: grid;
-    grid-template-columns: repeat(5, auto);
-    justify-items: center;
-}
-@media (max-width: 1000px) and (min-width: 500px) {
-  #pattern-selector {
-    grid-template-columns: repeat(10, auto);
-  }
-}
-
-#pattern-selector * {
-    width: 100%;
-    /* background-image: url('images/emoji.png'); */
-    cursor: pointer;
-}
 .icon {
-    width: 40px; height: 40px;
+    width: 30px; height: 30px;
     background: steelblue;
     fill: white;
     border-radius: 20px;
@@ -83,12 +52,9 @@
     margin: 2px;
     cursor: pointer;
 }
-#model-selector {
-    line-height: 1.4em;
-}
 #demo-tip{
     display: grid;
-    grid-template-columns: auto 40px;
+    grid-template-columns: 40px auto;
     align-items: center;
     column-gap: 10px;
     margin-bottom: 20px;
@@ -112,14 +78,15 @@
     color: rgba(0, 0, 0, 0.6);
     line-height: 1.4em;
     user-select: text;
-    font-size: 98%;
 }
 
 input[type=range] {
   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
-  width: 95%; /* Specific width is required for Firefox. */
+  width: 100%; /* Specific width is required for Firefox. */
   background: transparent; /* Otherwise white in Chrome */
   margin-bottom: 8px;
+  margin-left: 0px;
+  margin-right: 0px;
   touch-action: none;
 }
 
@@ -146,9 +113,9 @@ input[type=range]::-ms-track {
   cursor: pointer;
 
   /* Hides the slider so custom styles can be added */
-  background: transparent;
+ /* background: transparent;
   border-color: transparent;
-  color: transparent;
+  color: transparent;*/
 }
 
 /* Thumb */
@@ -156,19 +123,17 @@ input[type=range]::-ms-track {
 /* Special styling for WebKit/Blink */
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
+  height: 15px;
+  width: 15px;
   background: steelblue;
   cursor: pointer;
-  margin-top: -7px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+  margin-top: -0px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
 }
 
 /* All the same stuff for Firefox */
 input[type=range]::-moz-range-thumb {
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
+  height: 15px;
+  width: 15px;
   background: steelblue;
   cursor: pointer;
   border: none;
@@ -176,10 +141,9 @@ input[type=range]::-moz-range-thumb {
 
 /* All the same stuff for IE */
 input[type=range]::-ms-thumb {
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
-  background: grey;
+  height: 15px;
+  width: 15px;
+  background: stellblue;
   cursor: pointer;
 }
 
@@ -187,10 +151,9 @@ input[type=range]::-ms-thumb {
 
 input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
-  height: 3px;
+  height: 15px;
   cursor: pointer;
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
   border: none;
 }
 
@@ -200,19 +163,17 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 
 input[type=range]::-moz-range-track {
   width: 100%;
-  height: 3px;
+  height: 15px;
   cursor: pointer;
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
   border: none;
 }
 
 input[type=range]::-ms-track {
   width: 100%;
-  height: 3px;
+  height: 15px;
   cursor: pointer;
   background: rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
   border: none;
 }
 input[type=range]::-ms-fill-lower {
@@ -249,53 +210,42 @@ input[type="radio"] {
   height: 16px;
 }
 
-
-.tool {
-  cursor: pointer;
-  height: 70px;
-  min-width: 50px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-size: 50px;
-  background-position: center top;
-  padding-top: 50px;
+#controls {
   text-align: center;
+  padding-top: 15px;
 }
 
-/* Radio tools */
-.radiotool input {
-  display: none;
+#leq{
+  float: right;
+  text-align: center;
+  padding-right: 40px;
+  padding-top: 2px;
 }
 
-.radiotool input:checked ~ .tool {
-  filter: none;
-  opacity: 1.0;
+#leq * {
+  cursor: pointer !important;
 }
 
-.radiotool input:not(:checked) ~ .tool {
-  filter: grayscale();
-  opacity: 0.7;
+#controls span {
+  position: absolute;
+  right: 0px;
+  font-size: 80%;
 }
 
-#eraser {
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 1.0)), url(images/eraser.png);
+.slidetitle{
+  display: flex;
+  justify-content: center;
+  position: relative;
+  border-bottom: #adadad solid 1px;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
 }
 
-#pencil {
-  background-image: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0), rgba(255, 255, 255, 1.0)), url(images/pencil.png);
+#resetbutton {
+  float: left;
+  padding-left: 40px;
 }
 
-#adversary {
-  background-image: url(images/alien-monster.svg);
-}
-  
-#adversary-remove {
-  background-image: url(images/alien-monster-remove.svg);
-}
-
-#bin {
-  background-image: url(images/bin.png);
-}
   
 body {
   text-align: center;
@@ -303,18 +253,4 @@ body {
 
 body * {
   text-align: initial;
-}
-
-
-#paletteHint {
-  grid-column: 1/3;
-  color: rgba(0, 0, 0, 0.6);
-  line-height: 1.4em;
-  user-select: text;
-  font-size: 75%;
-}
-
-
-#bindiv {
-  grid-column: 1/3;
 }
