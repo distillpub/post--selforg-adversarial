@@ -75,17 +75,8 @@ Adversaries on 1% of the cells (red pixels).We highlight mistakes in classificat
 </figure>
 <p>We created a demo playground where the reader can draw digits and place adversaries with surgical precision. We encourage the reader to play with the demo to get a sense on how easily innocent cells can get swayed towards the wrong outcomes.</p>
 <iframe id="mnistDemoIframe" src="demo.html" scrolling="no" frameborder="0"
-    style="position: relative; height: 100px; width: 100px;"
+    style="position: relative; height: 100px; width: 100px;" onload="resizeIframe();"
 ></iframe>
-<script>
-    var iframe = document.getElementById("mnistDemoIframe");
-    
-    iframe.onload = function(){
-        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
-        iframe.style.width = '100%';
-    };
-    window.onresize = iframe.onload;
-</script>
 <h2 id='adversarial-injections-for-growing-cas'>Adversarial Injections for Growing CAs</h2>
 <a href="https://colab.research.google.com/drive/1N2V8auh_Hsl6kL4FOK18_OS4BakU1n4t#scrollTo=ByHbsY0EuyqB" class="colab-root">Try in a <span class="colab-span">Notebook</span></a>
 <p>One question we may ask is whether the same kind of adversarial attack that was successful for the MNIST CA would work for the Growing CA model too. The Growing CA models' goals are to be able to grow a complex image pattern from a small seed, and having its result be persistent over time and robust to significant perturbations. In this article, we will focus on the lizard pattern.</p>
