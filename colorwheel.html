@@ -1,0 +1,55 @@
+<style>
+  #pointer {
+    width: 40px;
+  }
+  #colorcontainer {
+    width: 300px;
+    margin: 0 auto;
+  }
+  #hueSlider {
+    width: 300px;
+  } 
+  #colorwheel {
+    text-align: center;
+  }
+  #colortest {
+    text-align: center;
+  }
+  #colortest > img {
+    vertical-align: middle;
+  }
+</style>
+<h3 id="author-contributions">Accessibility</h3>
+<div id="colortest" class="color_heavy">
+  <img src="images/colortest1.png" width="150px"></img>
+  <img src="images/colortest2.png" width="200px"></img>
+</div>
+<div id="colorcontainer">
+  <input type="range" min="0" max="360" value="0" class="slider" id="hueSlider">
+</div> 
+<div id="colorwheel">
+  <img id="pointer" src="images/colorwheel.svg">
+</div>
+
+
+      <div id="paletteHint">This article relies on using color to demonstrate classification label. If you have trouble distinguishing the colours of lizards or of the digits in the above legend, please try and adjust the slider above to see if there is an alternative colour palette for you. The chosen palette will propagate throughout the article.</div>
+<script>
+  const $ = q=>document.documentElement.querySelector(q);
+  function* getAllEls(q) {
+    for (var e of document.documentElement.querySelectorAll(q)) {
+      yield e;
+    }
+    for (var item of document.querySelectorAll('iframe')) {
+      for (var e of item.contentWindow.document.body.querySelectorAll(q)) {
+        yield e;
+      };
+    };
+  };
+  $('#hueSlider').oninput = (e) => {
+    let hue = parseFloat(e.target.value);
+    let colorheavies = getAllEls('.color_heavy, figure');
+    for(let e of colorheavies) {
+      e.style.filter = "hue-rotate(" + hue + "deg)"
+    }
+  };
+</script>
