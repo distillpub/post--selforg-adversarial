@@ -93,9 +93,6 @@
     column-gap: 10px;
     margin-bottom: 20px;
 }
-#pointer {
-    width: 40px;
-}
 #status {
     font-size: 12px;
     color: rgba(0, 0, 0, 0.6);
@@ -295,6 +292,7 @@ input[type="radio"] {
 
 #bin {
   background-image: url(images/bin.png);
+  float: right;
 }
   
 body {

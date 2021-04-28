@@ -234,11 +234,6 @@ export function mnistDemo(divId, canvasId) {
               updateUI();
             };
 
-            $('#hueSlider').oninput = (e) => {
-                let hue = parseFloat(e.target.value);
-                $('#hueValue').innerText = hue;
-                $$$('.color_heavy, figure').forEach(e => {e.style.filter = "hue-rotate(" + hue + "deg)"});
-            };
             $('#speed').onchange = updateUI;
             $('#speed').oninput = updateUI;
             updateUI();
